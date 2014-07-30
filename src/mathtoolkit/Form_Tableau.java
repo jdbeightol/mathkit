@@ -306,19 +306,6 @@ public class Form_Tableau extends javax.swing.JInternalFrame
         setMaximizable(true);
         setResizable(true);
 
-        tableau1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][]
-            {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String []
-            {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
         tableau1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         tableau1.setRowHeight(48);
         tableau1.addMouseListener(new java.awt.event.MouseAdapter()
@@ -404,7 +391,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
     private mathtoolkit.Tableau tableau1;
     // End of variables declaration//GEN-END:variables
 }

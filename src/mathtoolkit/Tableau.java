@@ -64,6 +64,7 @@ public class Tableau extends JTable
     public Tableau()
     {
         super();
+        this.setTableHeader(null);
         setCellEditor(new TableauCellEditor());
         initTabBehavior();
     }

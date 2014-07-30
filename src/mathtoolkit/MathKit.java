@@ -137,11 +137,18 @@ public class MathKit
     {
         Rational[][] out = in;
         Point pv = findIdealMBPivot(in);
+        int cycleCount = 50;
         
         while(!isMBF(out) && pv.i >= 0 && pv.j >= 0)
         {
-            out = pivotTransform(pv, out);
-            pv = findIdealMBPivot(out);
+            if(cycleCount >= 0)
+            {
+                out = pivotTransform(pv, out);
+                pv = findIdealMBPivot(out);
+            }
+            
+            else
+                System.out.println("The tableau appears to be cycling.");
         }
         
         return out;
