@@ -158,7 +158,7 @@ public class Tableau extends JTable
             
             t.addRow(s);
         }
-                
+        
         this.setModel(t);
     }
     

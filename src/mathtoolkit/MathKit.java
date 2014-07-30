@@ -122,19 +122,31 @@ public class MathKit
     
     public static DataSet negativeTranspose(DataSet in)
     {
-        DataSet out = new DataSet(new Rational[in.data[0].length][in.data.length]);
+        DataSet out = in;
         
-        out.maxVariables = in.minVariables;
-        out.maxSlackVars = in.minSlackVars;
-        
-        out.minVariables = in.maxVariables;
-        out.minSlackVars = in.maxSlackVars;    
-        
-        for(int i = 0; i < in.data.length; i++)
-            for(int j = 0; j < in.data[i].length; j++)
-                out.data[j][i] = in.data[i][j].multiply(-1);
+        if(!in.isMinNull())
+        {
+            out = new DataSet(new Rational[in.data[0].length][in.data.length]);
 
-        printTableauTransform("Negative Transposition", in, out);
+            out.maxVariables = in.minVariables;
+            out.maxSlackVars = in.minSlackVars;
+
+            out.minVariables = null;
+            out.minSlackVars = null;
+
+            out.maxSlackVars[out.maxSlackVars.length - 1] = "-" 
+                    + out.maxSlackVars[out.maxSlackVars.length - 1];
+
+            for(int i = 0; i < in.data.length; i++)
+                for(int j = 0; j < in.data[i].length; j++)
+                    out.data[j][i] = in.data[i][j].multiply(-1);
+
+            printTableauTransform("Negative Transposition", in, out);
+        }
+        
+        else
+            System.out.println("Unable to transpose the tableau as there are no"
+                    + " minimum variables..");
         
         return out;
     }
@@ -363,7 +375,7 @@ public class MathKit
             varLength = 0;
 
         String[] output = new String[lines];
-        String inFormat, outFormat, varFormat, arrFormat;
+        String inFormat, outFormat, varFormatL, varFormatR, arrFormat;
         
         // Calculate optimal widths.
         for(Rational[] n : in.data)
@@ -396,19 +408,27 @@ public class MathKit
         
         inFormat = String.format("%%%ds", Math.max(varLength, ++inLength));
         outFormat = String.format("%%%ds", Math.max(varLength, ++outLength));
-        varFormat = String.format("%%-%ds", (varLength > 0)?varLength:1);
+        varFormatL = String.format("%%-%ds", (varLength > 0)?varLength:1);
+        varFormatR = String.format("%%%ds", (varLength > 0)?varLength:1);
         
         arrFormat = "       %2s       ";
         
         // Generate the maximum tableau's variables.
         output[0] = "";
         
-        if(!in.isMaxNull() && !out.isMaxNull())
+        if(!in.isMaxNull() || !out.isMaxNull())
         {
-            if(!in.isMinNull() && !out.isMinNull())
-                output[0] += String.format(varFormat, " ");
-            
             output[0] += "  ";
+
+            if(!in.isMinNull())
+                output[0] += String.format(varFormatR, " ");
+            
+            else
+                output[0] += " ";
+        }
+
+        if(!in.isMaxNull())
+        {
             
             for(int k = 0; k < in.data[0].length; k++)
                 if(k < in.maxVariables.length)
@@ -416,16 +436,26 @@ public class MathKit
                 
                 else
                     output[0] += String.format(inFormat, " ");
-            
-            output[0] += String.format(varFormat, " ");
+        }
 
-            output[0] += " " + String.format(arrFormat, " ");
+        else if(!in.isMaxNull() || !out.isMaxNull())
+            for(int k = 0; k < in.data[0].length; k++)
+                    output[0] += String.format(inFormat, " ");
+        
+        if(!in.isMaxNull() || !out.isMaxNull())
+        {
+            output[0] += "     ";
 
-            if(!in.isMinNull() && !out.isMinNull())
-                output[0] += String.format(varFormat, " ");
-            
-            output[0] += "    ";
+            output[0] += String.format(varFormatL, " ");
 
+            output[0] += String.format(arrFormat, " ");
+
+            if(!out.isMinNull())
+                output[0] += String.format(varFormatR, " ");
+        }
+        
+        if(!out.isMaxNull())
+        {
             for(int k = 0; k < out.data[0].length; k++)
                 if(k < out.maxVariables.length)
                     output[0] += String.format(outFormat, out.maxVariables[k]);
@@ -434,13 +464,17 @@ public class MathKit
                     output[0] += String.format(outFormat, " ");
         }
         
+        else if(!in.isMaxNull() || !out.isMaxNull())
+            for(int k = 0; k < out.data[0].length; k++)
+                output[0] += String.format(outFormat, " ");
+        
         // Generate the tableau's data.
         for(int i = 0; i < lines - 2; i++)
         {
             int lineNumber = i + 1;
             if(i < in.data.length)
             {
-                output[lineNumber] = ((!in.isMinNull())?String.format(varFormat,
+                output[lineNumber] = ((!in.isMinNull())?String.format(varFormatR,
                         in.minVariables[i]):" ") + " [ ";
                 
                 for(int j = 0; j < in.data[i].length; j++)
@@ -450,14 +484,14 @@ public class MathKit
                 
                 output[lineNumber] += "] " 
                         + ((!in.isMaxNull())?
-                        String.format(varFormat, "="
+                        String.format(varFormatL, "="
                                 + ((i < in.data.length - 1)?"-":"") 
                                 + in.maxSlackVars[i]):" ");
             }
             
             else
             {
-                output[lineNumber] += "   " + String.format(varFormat, " ");
+                output[lineNumber] += "   " + String.format(varFormatR, " ");
                 
                 for(Rational unused : in.data[0])
                     output[lineNumber] += String.format(inFormat, " ");
@@ -468,7 +502,7 @@ public class MathKit
             
             if(i < out.data.length)
             {
-                output[lineNumber] += ((!out.isMinNull())?String.format(varFormat,
+                output[lineNumber] += ((!out.isMinNull())?String.format(varFormatR,
                         out.minVariables[i]):"") + " [ ";
                 
                 for(Rational r : out.data[i])
@@ -477,7 +511,7 @@ public class MathKit
                 
                 output[lineNumber] += "] " 
                         + ((!out.isMaxNull())?
-                        String.format(varFormat, "="
+                        String.format(varFormatL, "="
                                 + ((i < out.data.length - 1)?"-":"") 
                                 + out.maxSlackVars[i]):" ");
                 
@@ -485,7 +519,7 @@ public class MathKit
             
             else
             {
-                output[lineNumber] += "   " + String.format(varFormat, " ");
+                output[lineNumber] += "   " + String.format(varFormatL, " ");
                 
                 for(Rational unused : out.data[0])
                     output[lineNumber] += String.format(outFormat, " ");
@@ -495,35 +529,55 @@ public class MathKit
         // Generate the minimum tableau's slack variables.
         output[lines - 1] = "";
         
-        if(!in.isMinNull() && !out.isMinNull())
+        if(!in.isMinNull() || !out.isMinNull())
         {
-            output[lines - 1] += String.format(varFormat, " ");
-            
             output[lines - 1] += "  ";
+
+            if(!in.isMinNull())
+                output[lines - 1] += String.format(varFormatR, " ");
+        }
+
+        if(!in.isMinNull())
+        {
             
             for(int k = 0; k < in.data[0].length; k++)
-                if(k < in.minSlackVars.length)
-                    output[lines - 1] += String.format(inFormat, "=" + in.minSlackVars[k]);
+                if(k < in.minVariables.length)
+                    output[lines - 1] += String.format(outFormat, "=" + in.minSlackVars[k]);
                 
                 else
                     output[lines - 1] += String.format(inFormat, " ");
-            
-            if(!in.isMaxNull() && !out.isMaxNull())
-                output[lines - 1] +=String.format(varFormat, " ");
+        }
 
-            output[lines - 1] +=  " " +  String.format(arrFormat, " ");
-            
-            output[lines - 1] += String.format(varFormat, " ");
-            
-            output[lines - 1] += "    ";
-            
+        else if(!in.isMinNull() || !out.isMinNull())
+            for(int k = 0; k < in.data[0].length; k++)
+                    output[lines - 1] += String.format(inFormat, " ");
+        
+        if(!in.isMinNull() || !out.isMinNull())
+        {
+            output[lines - 1] += "     ";
+
+            output[lines - 1] += String.format(varFormatL, " ");
+
+            output[lines - 1] += String.format(arrFormat, " ");
+
+            if(!out.isMinNull())
+                output[lines - 1] += String.format(varFormatR, " ");
+        }
+        
+        if(!out.isMinNull())
+        {
             for(int k = 0; k < out.data[0].length; k++)
-                if(k < out.minSlackVars.length)
+                if(k < out.minVariables.length)
                     output[lines - 1] += String.format(outFormat, "=" + out.minSlackVars[k]);
                 
                 else
                     output[lines - 1] += String.format(outFormat, " ");
         }
+        
+        else if(!in.isMinNull() || !out.isMinNull())
+            for(int k = 0; k < out.data[0].length; k++)
+                output[lines - 1] += String.format(outFormat, " ");
+        
         
         // Print the generated data.
         System.out.printf("%s:\n", title);
