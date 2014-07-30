@@ -45,20 +45,36 @@ public class Form_Tableau extends javax.swing.JInternalFrame
         super("Simplex Tableau " + ++FRAMECOUNT, true, true, true, true);
         initComponents();
         initTableau(variables, constraints);
-                
+        
         setLocation(45 * (FRAMECOUNT % 10), 45 * (FRAMECOUNT % 10));
     }
     
     private void initTableau(int variables, int constraints)
     {
-        tableau1.setModel(new Tableau.TableauModel(constraints + 1,
-                variables + 1));
+        DataSet d = new DataSet();
+
+        d.data = new Rational[constraints + 1][variables + 1];
+        d.maxVariables = new String[variables + 1];
+        d.maxSlackVars = new String[constraints + 1];
+        
+        for(int i = 0; i < variables; i++)
+            d.maxVariables[i] = "x" + (1 + i);
+        
+        d.maxVariables[variables] = "-1";
+        
+        for(int i = 0; i < constraints; i++)
+            d.maxSlackVars[i] = "t" + (1 + i);
+
+        d.maxSlackVars[constraints] = "f";
+        
+        tableau1.setData(d);        
     }
     
     private void revertToOriginal()
     {
         if(_original != null)
             tableau1.setData(_original);
+        
         else
             System.out.println("There is no original tableau to which to revert.");
     }
@@ -83,10 +99,10 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             public void event()
             {
                 DataSet tData = tableau1.getData();
-                tableau1.setData(new DataSet(MathKit.pivotTransform(new Point(
-                        tableau1.getSelectedRow(), tableau1.getSelectedColumn()), 
-                        tData.data)));
-
+                tableau1.setData(MathKit.pivotTransform(tData, new Point(
+                        tableau1.getSelectedRow(), tableau1.getSelectedColumn())
+                ));
+                
                 if(_original == null)
                     _original = tData;    
             }
@@ -102,24 +118,24 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             {
                 DataSet tData = tableau1.getData();
                 Point piv = new Point(-1, -1);
-
+                
                 if(!MathKit.isBSO(tData.data))
                     if(MathKit.isMBF(tData.data))
                     {
                         if(!MathKit.isUnbounded(tData.data))
                             piv = MathKit.findIdealMBFPivot(tData.data);
                     }
-
+                    
                     else
                         if(!MathKit.isInfeasible(tData.data))
                             piv = MathKit.findIdealMBPivot(tData.data);
-
+                
                 if(piv.i >= 0 && piv.j >= 0)
                     System.out.printf("The best probable pivot is the %s at "
                             + "(i=%d, j=%d).\n", 
                             tableau1.getValueAt(piv.i, piv.j).toString(), 
                             piv.i + 1, piv.j + 1);
-
+                
                 else
                     checkTableauState();
                     }
@@ -134,7 +150,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             public void event()
             {
                 DataSet tData = tableau1.getData();
-                tableau1.setData(new DataSet(MathKit.convertToMBF(tData.data)));
+                tableau1.setData(MathKit.convertToMBF(tData));
 
                 if(_original == null)
                     _original = tData;
@@ -152,7 +168,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             public void event()
             {
                 DataSet tData = tableau1.getData();
-                tableau1.setData(new DataSet(MathKit.negativeTranspose(tData.data)));
+                tableau1.setData(MathKit.negativeTranspose(tData));
 
                 if(_original == null)
                     _original = tData;
@@ -170,7 +186,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             public void event()
             {
                 DataSet tData = tableau1.getData();
-                tableau1.setData(new DataSet(MathKit.dantzigSimplexAlgorithm(tData.data, false)));
+                tableau1.setData(MathKit.dantzigSimplexAlgorithm(tData, false));
 
                 if(_original == null)
                     _original = tData;

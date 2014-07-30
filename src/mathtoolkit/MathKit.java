@@ -1,5 +1,6 @@
 package mathtoolkit;
 
+import java.util.Arrays;
 import java.util.TreeMap;
 
 public class MathKit
@@ -86,10 +87,10 @@ public class MathKit
 
     }
     
-    public static Rational[][] dantzigSimplexAlgorithm(Rational[][] in, boolean min)
+    public static DataSet dantzigSimplexAlgorithm(DataSet in, boolean min)
     {
         int cycleCount = 50;
-        Rational[][] out = in;
+        DataSet out = in;
         
         // If the problem is exclusively a min problem, get the negative 
         // transposition of it.
@@ -98,13 +99,13 @@ public class MathKit
         
         // Convert the tableau to maximum basic feasible form, if it isn't 
         // already.  Infeasibility is detected here.
-        if(!isMBF(out))
+        if(!isMBF(out.data))
             out = convertToMBF(out);  
         
         // If the tableau is not in BSO form, check pivot until it is.  
         // Unboundedness is detected here.
-        if(!isInfeasible(in))
-            while(!isBSO(out) && findIdealMBFPivot(out).i >= 0)
+        if(!isInfeasible(out.data))
+            while(!isBSO(out.data) && findIdealMBFPivot(out.data).i >= 0)
                 if(cycleCount-- <= 0)
                 {
                     System.out.println("The tableau appears to be cycling.");
@@ -112,42 +113,45 @@ public class MathKit
                 }
                 
                 else
-                    out = pivotTransform(findIdealMBFPivot(out), out);
+                    out = pivotTransform(out, findIdealMBFPivot(out.data));
         
-        checkState(out);
+        checkState(out.data);
         
         return out;
     }
     
-    public static Rational[][] negativeTranspose(Rational[][] in)
+    public static DataSet negativeTranspose(DataSet in)
     {
-        Rational[][] out = new Rational[in[0].length][in.length];
+        DataSet out = new DataSet(new Rational[in.data[0].length][in.data.length]);
         
-        for(int i = 0; i < in.length; i++)
-            for(int j = 0; j < in[i].length; j++)
-                out[j][i] = in[i][j].multiply(-1);
+        for(int i = 0; i < in.data.length; i++)
+            for(int j = 0; j < in.data[i].length; j++)
+                out.data[j][i] = in.data[i][j].multiply(-1);
 
         printTableauTransform("Negative Transposition", in, out);
         
         return out;
     }
     
-    public static Rational[][] convertToMBF(Rational[][] in)
+    public static DataSet convertToMBF(DataSet in)
     {
-        Rational[][] out = in;
-        Point pv = findIdealMBPivot(in);
+        DataSet out = in;
+        Point pv = findIdealMBPivot(in.data);
         int cycleCount = 50;
         
-        while(!isMBF(out) && pv.i >= 0 && pv.j >= 0)
+        while(!isMBF(out.data) && pv.i >= 0 && pv.j >= 0)
         {
-            if(cycleCount >= 0)
+            if(cycleCount-- > 0)
             {
-                out = pivotTransform(pv, out);
-                pv = findIdealMBPivot(out);
+                out = pivotTransform(out, pv);
+                pv = findIdealMBPivot(out.data);
             }
             
             else
+            {
                 System.out.println("The tableau appears to be cycling.");
+                break;
+            }
         }
         
         return out;
@@ -258,78 +262,74 @@ public class MathKit
         
         return pos;
     }
-        
-    public static Rational[][] pivotTransform(Point pivot, Rational[][] in)
-    {   return MathKit.pivotTransform(pivot, in, null, null, null, null);    }    
     
-    public static Rational[][] pivotTransform(Point pivot, Rational[][] in, String[] strX, String[] strT)
-    {   return MathKit.pivotTransform(pivot, in, strX, strT, null, null);    }    
-
-    public static Rational[][] pivotTransform(Point pv, Rational[][] in, String[] strX, String[] strT, String[] strY, String[] strS)
+    public static DataSet pivotTransform(DataSet in, Point pv)
     {
-        Rational[][] out = new Rational[in.length][in[0].length];
+        DataSet out = new DataSet(new Rational[in.data.length][in.data[0].length]);
         
         if(pv.i < 0 || pv.j < 0)
             return in;
         
         // (1) Choose a nonzero pivot entry p inside the tableau, but not in the
         // objective function row/column or the -1 column/row.
-        if(pv.i != in.length - 1 && pv.j != in[in.length - 1].length - 1 
-                && in[pv.i][pv.j].getValue() != 0.0)
+        if(pv.i != in.data.length - 1 && pv.j != in.data[in.data.length - 1].length - 1 
+                && in.data[pv.i][pv.j].getValue() != 0.0)
         {
             // (2) Interchange the variables corresponding to p's row and column,
             // leaving the signs behind.
-            if(strX != null && strT != null)
+            if(!in.isMaxNull())
             {
-                String temp = strX[pv.j];
+                out.maxVariables = Arrays.copyOf(in.maxVariables, in.maxVariables.length);
+                out.maxSlackVars = Arrays.copyOf(in.maxSlackVars, in.maxSlackVars.length);
                 
-                strX[pv.j] = strT[pv.i];
-                strT[pv.i] = temp;
+                out.maxVariables[pv.j] = in.maxSlackVars[pv.i];
+                out.maxSlackVars[pv.i] = in.maxVariables[pv.j];
             }
 
-            if(strY != null && strS != null)
+            if(!in.isMinNull())
             {
-                String temp = strY[pv.j];
+                out.minVariables = Arrays.copyOf(in.minVariables, in.minVariables.length);
+                out.minSlackVars = Arrays.copyOf(in.minSlackVars, in.minSlackVars.length);
                 
-                strY[pv.j] = strS[pv.i];
-                strS[pv.i] = temp;
+                out.minVariables[pv.j] = in.minSlackVars[pv.i];
+                out.minSlackVars[pv.i] = in.minVariables[pv.j];
             }
             
             // (3) Replace p by 1/p.
-            out[pv.i][pv.j] = in[pv.i][pv.j].getInverse();
+            out.data[pv.i][pv.j] = in.data[pv.i][pv.j].getInverse();
             
             // (4) Replace every entry q in the same row as p by q / p.
-            for(int q = 0; q < in[pv.i].length; q++)
+            for(int q = 0; q < in.data[pv.i].length; q++)
                 if(q != pv.j)
-                    out[pv.i][q] = in[pv.i][q].divide(in[pv.i][pv.j]);
+                    out.data[pv.i][q] = in.data[pv.i][q].divide(in.data[pv.i][pv.j]);
             
             // (5) Replace every entry r in the same column as p by -r / p
-            for(int r = 0; r < in.length; r++)
+            for(int r = 0; r < in.data.length; r++)
                 if(r != pv.i)
-                    out[r][pv.j] = in[r][pv.j].multiply(-1).divide(in[pv.i][pv.j]);
+                    out.data[r][pv.j] = in.data[r][pv.j].multiply(-1).divide(in.data[pv.i][pv.j]);
             
             // (6) Every entry s not in the same row and not in the same column
             // as p determines a unique entry q in the same row as p and in the
             // same column as s and a unique entry r in the same column as p and
             // in the same row as s.
             // Replace s by (ps - qr)/p
-            for(int a = 0; a < in.length; a++)
+            for(int a = 0; a < in.data.length; a++)
                 if(a != pv.i)
-                    for(int b = 0; b < in[a].length; b++)
+                    for(int b = 0; b < in.data[a].length; b++)
                         if(b != pv.j)
                         {
-                            Rational    p = in[pv.i][pv.j],
-                                        q = in[pv.i][b],
-                                        r = in[a][pv.j],
-                                        s = in[a][b];
+                            Rational    p = in.data[pv.i][pv.j],
+                                        q = in.data[pv.i][b],
+                                        r = in.data[a][pv.j],
+                                        s = in.data[a][b];
                             
-                            out[a][b] = p.multiply(s).subtract(q.multiply(r)).divide(p);
+                            out.data[a][b] = p.multiply(s).subtract(q.multiply(r)).divide(p);
                         }
         }
         
         else
          {
-            if(in[pv.i][pv.j].getValue() == 0) 
+            if(in.data[pv.i][pv.j].getValue() == 0) 
                 System.out.println("Cannot pivot on a 0.");
             
             return in;
@@ -357,7 +357,7 @@ public class MathKit
             varLength = 0;
 
         String[] output = new String[lines];
-        String inFormat, outFormat, varFormat;
+        String inFormat, outFormat, varFormat, arrFormat;
         
         // Calculate optimal widths.
         for(Rational[] n : in.data)
@@ -371,42 +371,58 @@ public class MathKit
         if(!in.isMaxNull())
         {
             for(String s : in.maxVariables)
-                varLength = Math.max(inLength, s.length());
+                varLength = Math.max(varLength, s.length());
 
             for(String s : in.maxSlackVars)
-                varLength = Math.max(inLength, s.length());
+                varLength = Math.max(varLength, s.length());
         }
         
         if(!in.isMinNull())
         {
             for(String s : in.minVariables)
-                varLength = Math.max(inLength, s.length());
+                varLength = Math.max(varLength, s.length());
             
             for(String s : in.minSlackVars)
-                varLength = Math.max(inLength, s.length());
+                varLength = Math.max(varLength, s.length());
         }
         
-        inFormat = String.format("%%%ds", inLength + 1);
-        outFormat = String.format("%%%ds", outLength + 1);
-        varFormat = String.format("%%%ds", (varLength > 0)?varLength:1);
+        varLength += 3;
+        
+        inFormat = String.format("%%%ds", Math.max(varLength, ++inLength));
+        outFormat = String.format("%%%ds", Math.max(varLength, ++outLength));
+        varFormat = String.format("%%-%ds", (varLength > 0)?varLength:1);
+        
+        arrFormat = "       %2s       ";
         
         // Generate the maximum tableau's variables.
         output[0] = "";
         
         if(!in.isMaxNull() && !out.isMaxNull())
         {
-            for(int k = 0; k < in.data.length; k++)
+            if(!in.isMinNull() && !out.isMinNull())
+                output[0] += String.format(varFormat, " ");
+            
+            output[0] += "    ";
+            
+            for(int k = 0; k < in.data[0].length; k++)
                 if(k < in.maxVariables.length)
-                    output[0] += String.format(inFormat, in.maxVariables[k]);
+                    output[0] += String.format(inFormat, in.maxVariables[k] + " ");
                 
                 else
                     output[0] += String.format(inFormat, " ");
             
-            output[0] += "                ";
+            output[0] += String.format(varFormat, " ");
+
+            output[0] += " " + String.format(arrFormat, " ");
+
+            if(!in.isMinNull() && !out.isMinNull())
+                output[0] += String.format(varFormat, " ");
             
-            for(int k = 0; k < out.data.length; k++)
+            output[0] += "    ";
+
+            for(int k = 0; k < out.data[0].length; k++)
                 if(k < out.maxVariables.length)
-                    output[0] += String.format(outFormat, out.maxVariables[k]);
+                    output[0] += String.format(outFormat, out.maxVariables[k] + " ");
                 
                 else
                     output[0] += String.format(outFormat, " ");
@@ -419,15 +435,18 @@ public class MathKit
             if(i < in.data.length)
             {
                 output[lineNumber] = ((!in.isMinNull())?String.format(varFormat,
-                        in.minVariables[i]):"") + " [ ";
+                        in.minVariables[i]):" ") + " [ ";
                 
                 for(int j = 0; j < in.data[i].length; j++)
                     output[lineNumber] += String.format(inFormat, 
                             in.data[i][j].toString()
                         + (( i == p.i && j == p.j)?"*":" "));
                 
-                output[lineNumber] += "] " + ((!in.isMaxNull())?String.format(
-                        varFormat, in.maxSlackVars[i]):" ");
+                output[lineNumber] += "] " 
+                        + ((!in.isMaxNull())?
+                        String.format(varFormat, "= "
+                                + ((i < in.data.length - 1)?"-":"") 
+                                + in.maxSlackVars[i]):" ");
             }
             
             else
@@ -438,7 +457,7 @@ public class MathKit
                     output[lineNumber] += String.format(inFormat, " ");
             }
             
-            output[lineNumber] += String.format("       %2s       ", 
+            output[lineNumber] += String.format(arrFormat,
                     (i == lines / 2 - 1)?"->":"  ");
             
             if(i < out.data.length)
@@ -446,12 +465,16 @@ public class MathKit
                 output[lineNumber] += ((!out.isMinNull())?String.format(varFormat,
                         out.minVariables[i]):"") + " [ ";
                 
-                   for(Rational r : out.data[i])
+                for(Rational r : out.data[i])
                     output[lineNumber] += String.format(outFormat, r.toString() 
                             + " ");
                 
-                output[lineNumber] += "] " + ((!out.isMaxNull())?String.format(
-                        varFormat, out.maxSlackVars[i]):" ");
+                output[lineNumber] += "] " 
+                        + ((!out.isMaxNull())?
+                        String.format(varFormat, "= "
+                                + ((i < out.data.length - 1)?"-":"") 
+                                + out.maxSlackVars[i]):" ");
+                
             }
             
             else
@@ -468,19 +491,30 @@ public class MathKit
         
         if(!in.isMinNull() && !out.isMinNull())
         {
-            for(int k = 0; k < in.data.length; k++)
+            output[lines - 1] += String.format(varFormat, " ");
+            
+            output[lines - 1] += "   ";
+            
+            for(int k = 0; k < in.data[0].length; k++)
                 if(k < in.minSlackVars.length)
-                    output[lines - 1] += String.format(inFormat, in.minSlackVars[k]);
+                    output[lines - 1] += String.format(inFormat, in.minSlackVars[k] + " ");
                 
                 else
                     output[lines - 1] += String.format(inFormat, " ");
             
-            output[lines - 1] += "                ";
+            if(!in.isMaxNull() && !out.isMaxNull())
+                output[lines - 1] +=String.format(varFormat, " ");
+
+            output[lines - 1] +=  " " +  String.format(arrFormat, " ");
             
-            for(int k = 0; k < out.data.length; k++)
+            output[lines - 1] += String.format(varFormat, " ");
+            
+            output[lines - 1] += "    ";
+            
+            for(int k = 0; k < out.data[0].length; k++)
                 if(k < out.minSlackVars.length)
-                    output[lines - 1] += String.format(outFormat, out.minSlackVars[k]);
-        
+                    output[lines - 1] += String.format(outFormat, out.minSlackVars[k] + " ");
+                
                 else
                     output[lines - 1] += String.format(outFormat, " ");
         }

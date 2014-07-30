@@ -2,6 +2,7 @@ package mathtoolkit;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 
 import javax.swing.AbstractAction;
 import javax.swing.DefaultCellEditor;
@@ -153,14 +154,14 @@ public class Tableau extends JTable
             String s[] = new String[r.length];
             
             for(int n = 0; n < r.length; n++)
-                s[n] = r[n].toString();
-                
+                s[n] = (r[n] != null)?r[n].toString():"";
+            
             t.addRow(s);
         }
-        
+                
         this.setModel(t);
     }
-
+    
     private void initTabBehavior() 
     {
         getActionMap().put(getInputMap(
@@ -179,7 +180,7 @@ public class Tableau extends JTable
                     col = 0;
                     row++;
                 }
-
+                
                 if(row >= getModel().getRowCount())
                     row = 0;
 
