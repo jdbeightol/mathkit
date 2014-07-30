@@ -439,8 +439,8 @@ public class MathKit
         }
 
         else if(!in.isMaxNull() || !out.isMaxNull())
-            for(int k = 0; k < in.data[0].length; k++)
-                    output[0] += String.format(inFormat, " ");
+            for(Rational unused : in.data[0])
+                output[0] += String.format(inFormat, " ");
         
         if(!in.isMaxNull() || !out.isMaxNull())
         {
@@ -465,7 +465,7 @@ public class MathKit
         }
         
         else if(!in.isMaxNull() || !out.isMaxNull())
-            for(int k = 0; k < out.data[0].length; k++)
+            for(Rational unused : out.data[0])
                 output[0] += String.format(outFormat, " ");
         
         // Generate the tableau's data.
@@ -549,8 +549,8 @@ public class MathKit
         }
 
         else if(!in.isMinNull() || !out.isMinNull())
-            for(int k = 0; k < in.data[0].length; k++)
-                    output[lines - 1] += String.format(inFormat, " ");
+            for(Rational unused : in.data[0])
+                output[lines - 1] += String.format(inFormat, " ");
         
         if(!in.isMinNull() || !out.isMinNull())
         {
@@ -575,7 +575,7 @@ public class MathKit
         }
         
         else if(!in.isMinNull() || !out.isMinNull())
-            for(int k = 0; k < out.data[0].length; k++)
+            for(Rational unused : out.data[0])
                 output[lines - 1] += String.format(outFormat, " ");
         
         
