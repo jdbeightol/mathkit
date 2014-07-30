@@ -541,13 +541,13 @@ public class MathKit
         {
             
             for(int k = 0; k < in.data[0].length; k++)
-                if(k < in.minVariables.length)
+                if(k < in.minSlackVars.length)
                     output[lines - 1] += String.format(outFormat, "=" + in.minSlackVars[k]);
                 
                 else
                     output[lines - 1] += String.format(inFormat, " ");
         }
-
+        
         else if(!in.isMinNull() || !out.isMinNull())
             for(Rational unused : in.data[0])
                 output[lines - 1] += String.format(inFormat, " ");
@@ -567,7 +567,7 @@ public class MathKit
         if(!out.isMinNull())
         {
             for(int k = 0; k < out.data[0].length; k++)
-                if(k < out.minVariables.length)
+                if(k < out.minSlackVars.length)
                     output[lines - 1] += String.format(outFormat, "=" + out.minSlackVars[k]);
                 
                 else
