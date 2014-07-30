@@ -56,6 +56,8 @@ public class Form_Tableau extends javax.swing.JInternalFrame
         d.data = new Rational[constraints + 1][variables + 1];
         d.maxVariables = new String[variables + 1];
         d.maxSlackVars = new String[constraints + 1];
+        d.minVariables = new String[constraints + 1];
+        d.minSlackVars = new String[variables + 1];
         
         for(int i = 0; i < variables; i++)
             d.maxVariables[i] = "x" + (1 + i);
@@ -63,10 +65,20 @@ public class Form_Tableau extends javax.swing.JInternalFrame
         d.maxVariables[variables] = "-1";
         
         for(int i = 0; i < constraints; i++)
+            d.minVariables[i] = "y" + (1 + i);
+        
+        d.minVariables[constraints] = "-1";
+
+        for(int i = 0; i < constraints; i++)
             d.maxSlackVars[i] = "t" + (1 + i);
 
         d.maxSlackVars[constraints] = "f";
         
+        for(int i = 0; i < variables; i++)
+            d.minSlackVars[i] = "s" + (1 + i);
+
+        d.minSlackVars[variables] = "g";
+
         tableau1.setData(d);        
     }
     
@@ -307,6 +319,10 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             {
                 tableau1MousePressed(evt);
             }
+            public void mouseReleased(java.awt.event.MouseEvent evt)
+            {
+                tableau1MouseReleased(evt);
+            }
         });
         jScrollPane1.setViewportView(tableau1);
 
@@ -373,6 +389,11 @@ public class Form_Tableau extends javax.swing.JInternalFrame
     {//GEN-HEADEREND:event_jMenuItem7ActionPerformed
         revertToOriginal();
     }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void tableau1MouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_tableau1MouseReleased
+    {//GEN-HEADEREND:event_tableau1MouseReleased
+        showPivotMenu(evt);        
+    }//GEN-LAST:event_tableau1MouseReleased
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem jMenuItem1;
