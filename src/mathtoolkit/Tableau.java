@@ -106,19 +106,9 @@ public class Tableau extends JTable
     public void setData(Rational[][] tableauData)
     {
         TableauModel model;
-        
         int columns = tableauData[0].length;
         
-        String[] str = new String[columns];
-        
-        for(int i = 0; i < columns; i++)
-            if(i == columns - 1)
-                str[i] = "-1";
-            
-            else
-                str[i] = "x"+(i+1);
-        
-        model = new Tableau.TableauModel(new Object[][] {}, str);
+        model = new Tableau.TableauModel(new Object[][] {}, new String[columns]);
         
         for(Rational[] r : tableauData)
         {
@@ -131,12 +121,6 @@ public class Tableau extends JTable
         }
         
         this.setModel(model);
-        
-        /*
-        for(int i = 0 ; i < t.getRowCount() ; i++)
-            for (int j = 0 ; j < t.getColumnCount(); j++)
-                t.setValueAt(tableauData[i][j].toString(), i, j);
-        */
     }
     
     private void initTabBehavior() 
