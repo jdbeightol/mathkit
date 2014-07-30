@@ -48,18 +48,61 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             tableau1.setData(_original);
     }
     
+    private void pivot()
+    {
+        try
+        {
+            Rational[][] tData = tableau1.getData();
+            tableau1.setData(MathKit.pivotTransform(new Point(
+                    tableau1.getSelectedRow(), tableau1.getSelectedColumn()), 
+                    tData));
+
+            if(_original == null)
+                _original = tData;
+        }
+         
+        catch(java.lang.NumberFormatException e)
+        {
+            System.err.println("[Error] " + e.getLocalizedMessage());
+            JOptionPane.showMessageDialog(null, "Tableau entries can only "
+                    + "contain numbers, decimals, or front slashes (/).",
+                    "Invalid Tableau Entry",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        
+        catch(java.lang.NullPointerException e)
+        {
+            System.err.println("[Error] " + e.getLocalizedMessage());
+            JOptionPane.showMessageDialog(null, "Please enter a value in each"
+                    + " tableau entry.",
+                    "Empty Cell", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
     private void findIdealPivot()
     {
-        Point piv = MathKit.findIdealMBFPivot(tableau1.getData());
+        Rational[][] tData = tableau1.getData();
+        Point piv = new Point(-1, -1);
+        
+        if(!MathKit.isBSO(tData))
+            if(MathKit.isMBF(tData))
+            {
+                if(!MathKit.isUnbounded(tData))
+                    piv = MathKit.findIdealMBFPivot(tData);
+            }
+            
+            else
+                if(!MathKit.isInfeasible(tData))
+                    piv = MathKit.findIdealMBPivot(tData);
         
         if(piv.i >= 0 && piv.j >= 0)
-            System.out.printf("The best probable pivot is the %s at (i=%d, j=%d)\n", 
+            System.out.printf("The best probable pivot is the %s at "
+                    + "(i=%d, j=%d).\n", 
                     tableau1.getValueAt(piv.i, piv.j).toString(), piv.i + 1,
                     piv.j + 1);
         
         else
-            System.out.println("Ideal pivot discovery for non-MBF tableaus "
-                    + "is not yet implemented.");
+            checkTableauState();
     }
     
     private void convertToMBF()
@@ -71,6 +114,8 @@ public class Form_Tableau extends javax.swing.JInternalFrame
 
             if(_original == null)
                 _original = tData;
+            
+            checkTableauState();
         }
          
         catch(java.lang.NumberFormatException e)
@@ -100,6 +145,8 @@ public class Form_Tableau extends javax.swing.JInternalFrame
 
             if(_original == null)
                 _original = tData;
+            
+            checkTableauState();
         }
          
         catch(java.lang.NumberFormatException e)
@@ -118,11 +165,6 @@ public class Form_Tableau extends javax.swing.JInternalFrame
                     + " tableau entry.",
                     "Empty Cell", JOptionPane.ERROR_MESSAGE);
         }
-    }
-    
-    private void checkTableauState()
-    {
-        MathKit.checkState(tableau1.getData());
     }
     
     private void solve()
@@ -152,6 +194,11 @@ public class Form_Tableau extends javax.swing.JInternalFrame
                     + " tableau entry.",
                     "Empty Cell", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    
+    private void checkTableauState()
+    {
+        MathKit.checkState(tableau1.getData());
     }
     
     private void showPivotMenu(java.awt.event.MouseEvent e)
@@ -305,9 +352,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
                 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem1ActionPerformed
     {//GEN-HEADEREND:event_jMenuItem1ActionPerformed
-        tableau1.setData(MathKit.pivotTransform(
-                new Point(tableau1.getSelectedRow(),
-                        tableau1.getSelectedColumn()), tableau1.getData()));
+        pivot();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void tableau1MousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_tableau1MousePressed

@@ -68,6 +68,7 @@ public class MathKit
             if(!isMBF(in))
                 if(isInfeasible(in))
                     System.out.println("The tableau is infeasible.");
+                
                 else
                     System.out.println("The tableau is not in Maximum Basic "
                             + "Feasible form.");               
@@ -135,10 +136,25 @@ public class MathKit
     public static Rational[][] convertToMBF(Rational[][] in)
     {
         Rational[][] out = in;
+        Point pv = findIdealMBPivot(in);
+        
+        while(!isMBF(out) && pv.i >= 0 && pv.j >= 0)
+        {
+            out = pivotTransform(pv, out);
+            pv = findIdealMBPivot(out);
+        }
+        
+        return out;
+    }
+    
+    public static Point findIdealMBPivot(Rational[][] in)
+    {
+        Point pos = new Point(-1, -1);
+        
         // (1) The current tableau is a maximum tableau.
         
-        // (2) If b1, b2, ... bm >= 0, go to step 6.
-        while(!isMBF(out))
+        // (2) If b1, b2, ... bm >= 0, go to step 6.        
+        if(!isMBF(in))
         {
             // (3) Choose a bi < 0 such that i is maximal.
             int i = in.length - 2;
@@ -158,7 +174,7 @@ public class MathKit
                     while(in[i][j].getValue() >= 0 && j < in[i].length - 1)
                         j++;
                     
-                    out = pivotTransform(new Point(i, j), out);
+                    return new Point(i, j);
                 }
                 
                 // (5 Cont.) If i < m, choose aij < 0, compute 
@@ -182,25 +198,13 @@ public class MathKit
                             minR = in[k][j].divide(in[k][j]);
                         }
                     
-                    out = pivotTransform(new Point(p, j), out);
+                    return new Point(p, j);
                 }
             }
             
             else
-            {
                 System.out.println("The Tableau is infeasible.");
-                return in;
-            }
-            
-            in = out;
         }
-        
-        return out;
-    }
-    
-    public static Point findIdealMBPivot(Rational[][] in)
-    {
-        Point pos = new Point(-1, -1);
         
         return pos;
     }
