@@ -8,6 +8,36 @@ public class Form_Tableau extends javax.swing.JInternalFrame
     private static int FRAMECOUNT = 0;
     private Rational[][] _original;
     
+    private abstract class ErrorCheck
+    {
+        public void doEvents()
+        {
+            try
+            {
+                event();
+            }
+
+            catch(java.lang.NumberFormatException e)
+            {
+                System.err.println("[Error] " + e.getLocalizedMessage());
+                JOptionPane.showMessageDialog(null, "Tableau entries can only "
+                        + "contain numbers, decimals, or front slashes (/).",
+                        "Invalid Tableau Entry",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
+            catch(java.lang.NullPointerException e)
+            {
+                System.err.println("[Error] " + e.getLocalizedMessage());
+                JOptionPane.showMessageDialog(null, "Please enter a value in each"
+                        + " tableau entry.",
+                        "Empty Cell", JOptionPane.ERROR_MESSAGE);
+            }    
+        }
+        
+        public abstract void event();
+    }
+    
     public Form_Tableau()
     {    this(2, 2);    }
     
@@ -22,24 +52,8 @@ public class Form_Tableau extends javax.swing.JInternalFrame
     
     private void initTableau(int variables, int constraints)
     {
-        Tableau.TableauModel model;
-        String[] str = new String[variables + 1];
-        Object[] obj = new Object[variables + 1];
-        
-        for(int i = 0; i <= variables; i++)
-            if(i == variables)
-                str[i] = "-1";
-            
-            else
-                str[i] = "x"+(i+1);
-        
-        model = new Tableau.TableauModel(new Object[][] {}, str);
-        
-        for(int i = 0; i < constraints; i++)
-            model.addRow(obj);
-        
-        model.addRow(obj);
-        tableau1.setModel(model);
+        tableau1.setModel(new Tableau.TableauModel(constraints + 1,
+                variables + 1));
     }
     
     private void revertToOriginal()
@@ -48,152 +62,108 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             tableau1.setData(_original);
     }
     
+    
     private void pivot()
     {
-        try
+        new ErrorCheck()
         {
-            Rational[][] tData = tableau1.getData();
-            tableau1.setData(MathKit.pivotTransform(new Point(
-                    tableau1.getSelectedRow(), tableau1.getSelectedColumn()), 
-                    tData));
+            @Override
+            public void event()
+            {
+                Rational[][] tData = tableau1.getData();
+                tableau1.setData(MathKit.pivotTransform(new Point(
+                        tableau1.getSelectedRow(), tableau1.getSelectedColumn()), 
+                        tData));
 
-            if(_original == null)
-                _original = tData;
-        }
-         
-        catch(java.lang.NumberFormatException e)
-        {
-            System.err.println("[Error] " + e.getLocalizedMessage());
-            JOptionPane.showMessageDialog(null, "Tableau entries can only "
-                    + "contain numbers, decimals, or front slashes (/).",
-                    "Invalid Tableau Entry",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-        
-        catch(java.lang.NullPointerException e)
-        {
-            System.err.println("[Error] " + e.getLocalizedMessage());
-            JOptionPane.showMessageDialog(null, "Please enter a value in each"
-                    + " tableau entry.",
-                    "Empty Cell", JOptionPane.ERROR_MESSAGE);
-        }
+                if(_original == null)
+                    _original = tData;    
+            }
+        }.doEvents();
     }
     
     private void findIdealPivot()
     {
-        Rational[][] tData = tableau1.getData();
-        Point piv = new Point(-1, -1);
-        
-        if(!MathKit.isBSO(tData))
-            if(MathKit.isMBF(tData))
+        new ErrorCheck()
+        {
+            @Override
+            public void event()
             {
-                if(!MathKit.isUnbounded(tData))
-                    piv = MathKit.findIdealMBFPivot(tData);
-            }
-            
-            else
-                if(!MathKit.isInfeasible(tData))
-                    piv = MathKit.findIdealMBPivot(tData);
-        
-        if(piv.i >= 0 && piv.j >= 0)
-            System.out.printf("The best probable pivot is the %s at "
-                    + "(i=%d, j=%d).\n", 
-                    tableau1.getValueAt(piv.i, piv.j).toString(), piv.i + 1,
-                    piv.j + 1);
-        
-        else
-            checkTableauState();
+                Rational[][] tData = tableau1.getData();
+                Point piv = new Point(-1, -1);
+
+                if(!MathKit.isBSO(tData))
+                    if(MathKit.isMBF(tData))
+                    {
+                        if(!MathKit.isUnbounded(tData))
+                            piv = MathKit.findIdealMBFPivot(tData);
+                    }
+
+                    else
+                        if(!MathKit.isInfeasible(tData))
+                            piv = MathKit.findIdealMBPivot(tData);
+
+                if(piv.i >= 0 && piv.j >= 0)
+                    System.out.printf("The best probable pivot is the %s at "
+                            + "(i=%d, j=%d).\n", 
+                            tableau1.getValueAt(piv.i, piv.j).toString(), 
+                            piv.i + 1, piv.j + 1);
+
+                else
+                    checkTableauState();
+                    }
+        }.doEvents();
     }
     
     private void convertToMBF()
     {
-        try
+        new ErrorCheck()
         {
-            Rational[][] tData = tableau1.getData();
-            tableau1.setData(MathKit.convertToMBF(tData));
+            @Override
+            public void event()
+            {
+                Rational[][] tData = tableau1.getData();
+                tableau1.setData(MathKit.convertToMBF(tData));
 
-            if(_original == null)
-                _original = tData;
-            
-            checkTableauState();
-        }
-         
-        catch(java.lang.NumberFormatException e)
-        {
-            System.err.println("[Error] " + e.getLocalizedMessage());
-            JOptionPane.showMessageDialog(null, "Tableau entries can only "
-                    + "contain numbers, decimals, or front slashes (/).",
-                    "Invalid Tableau Entry",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-        
-        catch(java.lang.NullPointerException e)
-        {
-            System.err.println("[Error] " + e.getLocalizedMessage());
-            JOptionPane.showMessageDialog(null, "Please enter a value in each"
-                    + " tableau entry.",
-                    "Empty Cell", JOptionPane.ERROR_MESSAGE);
-        }
+                if(_original == null)
+                    _original = tData;
+
+                checkTableauState();
+            }
+        }.doEvents();
     }
     
     private void negativeTranspose()
     {
-        try
+        new ErrorCheck()
         {
-            Rational[][] tData = tableau1.getData();
-            tableau1.setData(MathKit.negativeTranspose(tData));
+            @Override
+            public void event()
+            {
+                Rational[][] tData = tableau1.getData();
+                tableau1.setData(MathKit.negativeTranspose(tData));
 
-            if(_original == null)
-                _original = tData;
-            
-            checkTableauState();
-        }
-         
-        catch(java.lang.NumberFormatException e)
-        {
-            System.err.println("[Error] " + e.getLocalizedMessage());
-            JOptionPane.showMessageDialog(null, "Tableau entries can only "
-                    + "contain numbers, decimals, or front slashes (/).",
-                    "Invalid Tableau Entry",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-        
-        catch(java.lang.NullPointerException e)
-        {
-            System.err.println("[Error] " + e.getLocalizedMessage());
-            JOptionPane.showMessageDialog(null, "Please enter a value in each"
-                    + " tableau entry.",
-                    "Empty Cell", JOptionPane.ERROR_MESSAGE);
-        }
+                if(_original == null)
+                    _original = tData;
+
+                checkTableauState();
+            }
+        }.doEvents();
     }
     
     private void solve()
     {
-        try
+        new ErrorCheck()
         {
-            Rational[][] tData = tableau1.getData();
-            tableau1.setData(MathKit.dantzigSimplexAlgorithm(tData, false));
+            @Override
+            public void event()
+            {
+                Rational[][] tData = tableau1.getData();
+                tableau1.setData(MathKit.dantzigSimplexAlgorithm(tData, false));
 
-            if(_original == null)
-                _original = tData;
-        }
-         
-        catch(java.lang.NumberFormatException e)
-        {
-            System.err.println("[Error] " + e.getLocalizedMessage());
-            JOptionPane.showMessageDialog(null, "Tableau entries can only "
-                    + "contain numbers, decimals, or front slashes (/).",
-                    "Invalid Tableau Entry",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-        
-        catch(java.lang.NullPointerException e)
-        {
-            System.err.println("[Error] " + e.getLocalizedMessage());
-            JOptionPane.showMessageDialog(null, "Please enter a value in each"
-                    + " tableau entry.",
-                    "Empty Cell", JOptionPane.ERROR_MESSAGE);
-        }
+                if(_original == null)
+                    _original = tData;
+            }
+        }.doEvents();
     }
     
     private void checkTableauState()
