@@ -124,6 +124,12 @@ public class MathKit
     {
         DataSet out = new DataSet(new Rational[in.data[0].length][in.data.length]);
         
+        out.maxVariables = in.minVariables;
+        out.maxSlackVars = in.minSlackVars;
+        
+        out.minVariables = in.maxVariables;
+        out.minSlackVars = in.maxSlackVars;    
+        
         for(int i = 0; i < in.data.length; i++)
             for(int j = 0; j < in.data[i].length; j++)
                 out.data[j][i] = in.data[i][j].multiply(-1);
