@@ -33,7 +33,7 @@ public class Form_NewTableau extends javax.swing.JDialog
         jComboBox1.setModel(cmb1);
         jComboBox2.setModel(cmb2);
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents()

@@ -1,6 +1,5 @@
 package mathtoolkit;
 
-import mathtoolkit.Tableau.Point;
 import javax.swing.JOptionPane;
 
 public class Form_Tableau extends javax.swing.JInternalFrame
