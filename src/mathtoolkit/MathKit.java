@@ -62,8 +62,33 @@ public class MathKit
         return false;
     }
     
+    public static void checkState(Rational[][] in)
+    {
+        if(!isBSO(in))
+            if(!isMBF(in))
+                if(isInfeasible(in))
+                    System.out.println("The tableau is infeasible.");
+                else
+                    System.out.println("The tableau is not in Maximum Basic "
+                            + "Feasible form.");               
+            
+            else
+                if(isUnbounded(in))
+                    System.out.println("The tableau is unbounded.");
+                
+                else
+                    System.out.println("The problem is in Maximum Basic "
+                            + "Feasible form and is bounded.");
+        
+        else
+            System.out.println("The basic solution of the current tableau is "
+                    + "optimal.");
+
+    }
+    
     public static Rational[][] dantzigSimplexAlgorithm(Rational[][] in, boolean min)
     {
+        int cycleCount = 50;
         Rational[][] out = in;
         
         // If the problem is exclusively a min problem, get the negative 
@@ -80,7 +105,16 @@ public class MathKit
         // Unboundedness is detected here.
         if(!isInfeasible(in))
             while(!isBSO(out) && findIdealMBFPivot(out).i >= 0)
-                out = pivotTransform(findIdealMBFPivot(out), out);
+                if(cycleCount-- <= 0)
+                {
+                    System.out.println("The tableau appears to be cycling.");
+                    break;
+                }
+                
+                else
+                    out = pivotTransform(findIdealMBFPivot(out), out);
+        
+        checkState(out);
         
         return out;
     }
@@ -92,6 +126,8 @@ public class MathKit
         for(int i = 0; i < in.length; i++)
             for(int j = 0; j < in[i].length; j++)
                 out[j][i] = in[i][j].multiply(-1);
+
+        printTableauTransform("Negative Transposition", in, out);
         
         return out;
     }
@@ -212,6 +248,9 @@ public class MathKit
         
         return pos;
     }
+        
+    public static Rational[][] pivotTransform(Point pivot, Rational[][] in)
+    {   return MathKit.pivotTransform(pivot, in, null, null);    }    
     
     public static Rational[][] pivotTransform(Point pv, Rational[][] in, String[] v, String[] t)
     {
@@ -268,38 +307,121 @@ public class MathKit
         }
         
         else
-        {
+         {
             if(in[pv.i][pv.j].getValue() == 0) 
                 System.out.println("Cannot pivot on a 0.");
             
             return in;
         }
         
-        printTableau("Input", in, new Point(pv.i, pv.j));
-        printTableau("Output", out, new Point(-1, -1));
+        printTableauTransform("Pivot Transformation", in, out, pv);
         
         return out;        
     }
-        
-    public static Rational[][] pivotTransform(Point pivot, Rational[][] in)
-    {   return MathKit.pivotTransform(pivot, in, null, null);    }    
+
+    public static void printTableauTransform(String title, Rational[][] in, Rational[][] out)
+    {   printTableauTransform(title, in, out, new Point(-1, -1));    }
     
-    public static void printTableau(String title, Rational[][] in, Point p)
+    public static void printTableauTransform(String title, Rational[][] in, Rational[][] out, Point p)
     {
+        int lines = Math.max(in.length, out.length),
+            inLength = 0,
+            outLength = 0;
+        String[] output = new String[lines];
+        String inFormat, outFormat;
+        
+        for(Rational[] n : in)
+            for(Rational r : n)
+                inLength = Math.max(inLength, r.toString().length());
+
+        for(Rational[] t : out)
+            for(Rational r : t)
+                outLength = Math.max(outLength, r.toString().length());
+        
+        inFormat = String.format("%%%ds", inLength + 1);
+        outFormat = String.format("%%%ds", outLength + 1);
+
+        for(int i = 0; i < lines; i++)
+        {
+            if(i < in.length)
+            {
+                output[i] = "[ ";
+                
+                for(int j = 0; j < in[i].length; j++)
+                    output[i] += String.format(inFormat, in[i][j].toString()
+                        + (( i == p.i && j == p.j)?"*":" "));
+                
+                output[i] += "]";
+            }
+            
+            else
+            {
+                output[i] = "   ";
+                
+                for(int j = 0; j < in[0].length; j++)
+                    output[i] += String.format(inFormat, " ");
+            }
+            
+            output[i] += String.format("       %2s       ", (i == lines / 2)?"->":"  ");
+            
+            if(i < out.length)
+            {
+                output[i] += "[ ";
+                
+                for(Rational r : out[i])
+                    output[i] += String.format(outFormat, r.toString() + " ");
+                
+                output[i] += "]";
+            }
+               
+            else
+            {
+                output[i] += "   ";
+                
+                for(int j = 0; j < out[0].length; j++)
+                    output[i] += String.format(outFormat, " ");
+            }
+        }
+        
         System.out.printf("%s:\n", title);
         
-        for(int i = 0; i < in.length; i++)
-        {
-            System.out.print("[ "); 
-            
-            for(int j = 0; j < in[i].length; j++)
-                System.out.printf("%20s ", in[i][j].toString()
-                        + (( i == p.i && j == p.j)?"*":""));
-            
-            System.out.println("]");
-        }        
+        for(String o : output)
+            System.out.println(o);
+
+        System.out.println();
     }
     
     public static void printTableau(String title, Rational[][] in)
     {   printTableau(title, in, new Point(-1, -1));    }
+    
+    public static void printTableau(String title, Rational[][] in, Point p)
+    {
+        int length = 0;
+        String[] output = new String[in.length];
+        String format;
+        
+        for(Rational[] n : in)
+            for(Rational r : n)
+                length = Math.max(length, r.toString().length());
+
+        format = String.format("%%%ds ", length);
+
+        for(int i = 0; i < in.length; i++)
+        {
+            output[i] = "[ ";
+
+            for(int j = 0; j < in[i].length; j++)
+                output[i] += String.format(format, in[i][j].toString()
+                    + (( i == p.i && j == p.j)?"*":" "));
+
+            output[i] += "]";
+        }
+        
+        System.out.printf("%s:\n", title);
+        
+        for(String o : output)
+            System.out.println(o);
+        
+        System.out.println();
+    }
 }

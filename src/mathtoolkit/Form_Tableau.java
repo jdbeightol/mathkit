@@ -5,18 +5,19 @@ import javax.swing.JOptionPane;
 
 public class Form_Tableau extends javax.swing.JInternalFrame
 {
-    private static int frameCount = 0;
+    private static int FRAMECOUNT = 0;
+    private Rational[][] _original;
     
     public Form_Tableau()
     {    this(2, 2);    }
     
     public Form_Tableau(int variables, int constraints)
     {
-        super("Simplex Tableau " + ++frameCount, true, true, true, true);
+        super("Simplex Tableau " + ++FRAMECOUNT, true, true, true, true);
         initComponents();
         initTableau(variables, constraints);
                 
-        setLocation(45 * (frameCount % 10), 45 * (frameCount % 10));
+        setLocation(45 * (FRAMECOUNT % 10), 45 * (FRAMECOUNT % 10));
     }
     
     private void initTableau(int variables, int constraints)
@@ -41,59 +42,98 @@ public class Form_Tableau extends javax.swing.JInternalFrame
         tableau1.setModel(model);
     }
     
+    private void revertToOriginal()
+    {
+        if(_original != null)
+            tableau1.setData(_original);
+    }
+    
     private void findIdealPivot()
     {
         Point piv = MathKit.findIdealMBFPivot(tableau1.getData());
         
         if(piv.i >= 0 && piv.j >= 0)
-            System.out.printf("A best probable pivot is %s at i=%d j=%d\n", 
+            System.out.printf("The best probable pivot is the %s at (i=%d, j=%d)\n", 
                     tableau1.getValueAt(piv.i, piv.j).toString(), piv.i + 1,
                     piv.j + 1);
         
         else
-            System.out.println("Ideal MBF pivot is not implemented yet.");
+            System.out.println("Ideal pivot discovery for non-MBF tableaus "
+                    + "is not yet implemented.");
     }
     
     private void convertToMBF()
     {
-        tableau1.setData(MathKit.convertToMBF(tableau1.getData()));
+        try
+        {
+            Rational[][] tData = tableau1.getData();
+            tableau1.setData(MathKit.convertToMBF(tData));
+
+            if(_original == null)
+                _original = tData;
+        }
+         
+        catch(java.lang.NumberFormatException e)
+        {
+            System.err.println("[Error] " + e.getLocalizedMessage());
+            JOptionPane.showMessageDialog(null, "Tableau entries can only "
+                    + "contain numbers, decimals, or front slashes (/).",
+                    "Invalid Tableau Entry",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        
+        catch(java.lang.NullPointerException e)
+        {
+            System.err.println("[Error] " + e.getLocalizedMessage());
+            JOptionPane.showMessageDialog(null, "Please enter a value in each"
+                    + " tableau entry.",
+                    "Empty Cell", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     private void negativeTranspose()
     {
-        tableau1.setData(MathKit.negativeTranspose(tableau1.getData()));
+        try
+        {
+            Rational[][] tData = tableau1.getData();
+            tableau1.setData(MathKit.negativeTranspose(tData));
+
+            if(_original == null)
+                _original = tData;
+        }
+         
+        catch(java.lang.NumberFormatException e)
+        {
+            System.err.println("[Error] " + e.getLocalizedMessage());
+            JOptionPane.showMessageDialog(null, "Tableau entries can only "
+                    + "contain numbers, decimals, or front slashes (/).",
+                    "Invalid Tableau Entry",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        
+        catch(java.lang.NullPointerException e)
+        {
+            System.err.println("[Error] " + e.getLocalizedMessage());
+            JOptionPane.showMessageDialog(null, "Please enter a value in each"
+                    + " tableau entry.",
+                    "Empty Cell", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
-    private void checkForKlingons()
+    private void checkTableauState()
     {
-        Rational[][] tab = tableau1.getData();
-                
-        if(!MathKit.isBSO(tab))
-            if(!MathKit.isMBF(tab))
-                if(MathKit.isInfeasible(tab))
-                    System.out.println("The tableau is infeasible.");
-                else
-                    System.out.println("The tableau is not in Maximum Basic "
-                            + "Feasible form.");               
-            
-            else
-                if(MathKit.isUnbounded(tab))
-                    System.out.println("The tableau is unbounded.");
-                
-                else
-                    System.out.println("The problem is in Maximum Basic "
-                            + "Feasible form and is bounded.");
-        
-        else
-            System.out.println("The basic solution of the current tableau is "
-                    + "optimal.");
+        MathKit.checkState(tableau1.getData());
     }
     
     private void solve()
     {
         try
         {
-            tableau1.setData(MathKit.dantzigSimplexAlgorithm(tableau1.getData(), false));
+            Rational[][] tData = tableau1.getData();
+            tableau1.setData(MathKit.dantzigSimplexAlgorithm(tData, false));
+
+            if(_original == null)
+                _original = tData;
         }
          
         catch(java.lang.NumberFormatException e)
@@ -133,11 +173,13 @@ public class Form_Tableau extends javax.swing.JInternalFrame
 
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableau1 = new mathtoolkit.Tableau();
 
@@ -151,16 +193,6 @@ public class Form_Tableau extends javax.swing.JInternalFrame
         });
         jPopupMenu1.add(jMenuItem1);
 
-        jMenuItem2.setText("Negative Transpose");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                jMenuItem2ActionPerformed(evt);
-            }
-        });
-        jPopupMenu1.add(jMenuItem2);
-
         jMenuItem3.setText("Find Ideal Pivot");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener()
         {
@@ -171,8 +203,17 @@ public class Form_Tableau extends javax.swing.JInternalFrame
         });
         jPopupMenu1.add(jMenuItem3);
 
+        jMenuItem2.setText("Negative Transpose");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(jMenuItem2);
+
         jMenuItem4.setText("Convert to MBF");
-        jMenuItem4.setToolTipText("");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -182,7 +223,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
         });
         jPopupMenu1.add(jMenuItem4);
 
-        jMenuItem5.setText("Check State");
+        jMenuItem5.setText("Check Current State");
         jMenuItem5.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -191,6 +232,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             }
         });
         jPopupMenu1.add(jMenuItem5);
+        jPopupMenu1.add(jSeparator1);
 
         jMenuItem6.setText("Solve");
         jMenuItem6.addActionListener(new java.awt.event.ActionListener()
@@ -201,6 +243,16 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             }
         });
         jPopupMenu1.add(jMenuItem6);
+
+        jMenuItem7.setText("Revert to Original");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(jMenuItem7);
 
         setClosable(true);
         setIconifiable(true);
@@ -274,7 +326,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem5ActionPerformed
     {//GEN-HEADEREND:event_jMenuItem5ActionPerformed
-        checkForKlingons();
+        checkTableauState();
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem4ActionPerformed
@@ -291,6 +343,11 @@ public class Form_Tableau extends javax.swing.JInternalFrame
     {//GEN-HEADEREND:event_jMenuItem2ActionPerformed
         negativeTranspose();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem7ActionPerformed
+    {//GEN-HEADEREND:event_jMenuItem7ActionPerformed
+        revertToOriginal();
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem jMenuItem1;
@@ -299,8 +356,10 @@ public class Form_Tableau extends javax.swing.JInternalFrame
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
     private mathtoolkit.Tableau tableau1;
     // End of variables declaration//GEN-END:variables
 }

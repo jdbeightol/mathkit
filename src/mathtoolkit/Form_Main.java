@@ -12,14 +12,11 @@ public class Form_Main extends javax.swing.JFrame
         
         setLocationRelativeTo(null);
         
-        if(!_DEBUG)
-        {
-            _CONSOLE = new Form_Console();
-            this.desktopPane.add(_CONSOLE);
-            _CONSOLE.setVisible(true);
-        }
+        _CONSOLE = new Form_Console();
+        this.desktopPane.add(_CONSOLE);
+        _CONSOLE.setVisible(true);
         
-        else
+        if(_DEBUG)
         {
             Form_Tableau test = new Form_Tableau(2, 2);
             this.desktopPane.add(test);
