@@ -11,7 +11,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
     private abstract class ErrorCheck
     {
         public abstract void event();
-
+        
         public void doEvents()
         {
             try
@@ -62,6 +62,18 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             tableau1.setData(_original);
         else
             System.out.println("There is no original tableau to which to revert.");
+    }
+    
+    private void checkTableauState()
+    {
+        new ErrorCheck()
+        {
+            @Override
+            public void event()
+            {
+                MathKit.checkState(tableau1.getData());
+            }
+        }.doEvents();
     }
     
     private void pivot()
@@ -165,11 +177,6 @@ public class Form_Tableau extends javax.swing.JInternalFrame
                     _original = tData;
             }
         }.doEvents();
-    }
-    
-    private void checkTableauState()
-    {
-        MathKit.checkState(tableau1.getData());
     }
     
     private void showPivotMenu(java.awt.event.MouseEvent e)
