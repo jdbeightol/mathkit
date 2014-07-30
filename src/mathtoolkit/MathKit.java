@@ -402,11 +402,11 @@ public class MathKit
             if(!in.isMinNull() && !out.isMinNull())
                 output[0] += String.format(varFormat, " ");
             
-            output[0] += "    ";
+            output[0] += "  ";
             
             for(int k = 0; k < in.data[0].length; k++)
                 if(k < in.maxVariables.length)
-                    output[0] += String.format(inFormat, in.maxVariables[k] + " ");
+                    output[0] += String.format(inFormat, in.maxVariables[k]);
                 
                 else
                     output[0] += String.format(inFormat, " ");
@@ -422,7 +422,7 @@ public class MathKit
 
             for(int k = 0; k < out.data[0].length; k++)
                 if(k < out.maxVariables.length)
-                    output[0] += String.format(outFormat, out.maxVariables[k] + " ");
+                    output[0] += String.format(outFormat, out.maxVariables[k]);
                 
                 else
                     output[0] += String.format(outFormat, " ");
@@ -444,7 +444,7 @@ public class MathKit
                 
                 output[lineNumber] += "] " 
                         + ((!in.isMaxNull())?
-                        String.format(varFormat, "= "
+                        String.format(varFormat, "="
                                 + ((i < in.data.length - 1)?"-":"") 
                                 + in.maxSlackVars[i]):" ");
             }
@@ -471,7 +471,7 @@ public class MathKit
                 
                 output[lineNumber] += "] " 
                         + ((!out.isMaxNull())?
-                        String.format(varFormat, "= "
+                        String.format(varFormat, "="
                                 + ((i < out.data.length - 1)?"-":"") 
                                 + out.maxSlackVars[i]):" ");
                 
@@ -486,18 +486,18 @@ public class MathKit
             }
         }
         
-        // Generate the minimum tableau's slack variables
+        // Generate the minimum tableau's slack variables.
         output[lines - 1] = "";
         
         if(!in.isMinNull() && !out.isMinNull())
         {
             output[lines - 1] += String.format(varFormat, " ");
             
-            output[lines - 1] += "   ";
+            output[lines - 1] += "  ";
             
             for(int k = 0; k < in.data[0].length; k++)
                 if(k < in.minSlackVars.length)
-                    output[lines - 1] += String.format(inFormat, in.minSlackVars[k] + " ");
+                    output[lines - 1] += String.format(inFormat, "=" + in.minSlackVars[k]);
                 
                 else
                     output[lines - 1] += String.format(inFormat, " ");
@@ -513,7 +513,7 @@ public class MathKit
             
             for(int k = 0; k < out.data[0].length; k++)
                 if(k < out.minSlackVars.length)
-                    output[lines - 1] += String.format(outFormat, out.minSlackVars[k] + " ");
+                    output[lines - 1] += String.format(outFormat, "=" + out.minSlackVars[k]);
                 
                 else
                     output[lines - 1] += String.format(outFormat, " ");
