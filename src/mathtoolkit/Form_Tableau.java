@@ -5,7 +5,7 @@ import javax.swing.JOptionPane;
 public class Form_Tableau extends javax.swing.JInternalFrame
 {
     private static int FRAMECOUNT = 0;
-    private Rational[][] _original;
+    private DataSet _original;
     
     private abstract class ErrorCheck
     {
@@ -70,7 +70,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             @Override
             public void event()
             {
-                MathKit.checkState(tableau1.getData());
+                MathKit.checkState(tableau1.getData().data);
             }
         }.doEvents();
     }
@@ -82,10 +82,10 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             @Override
             public void event()
             {
-                Rational[][] tData = tableau1.getData();
-                tableau1.setData(MathKit.pivotTransform(new Point(
+                DataSet tData = tableau1.getData();
+                tableau1.setData(new DataSet(MathKit.pivotTransform(new Point(
                         tableau1.getSelectedRow(), tableau1.getSelectedColumn()), 
-                        tData));
+                        tData.data)));
 
                 if(_original == null)
                     _original = tData;    
@@ -100,19 +100,19 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             @Override
             public void event()
             {
-                Rational[][] tData = tableau1.getData();
+                DataSet tData = tableau1.getData();
                 Point piv = new Point(-1, -1);
 
-                if(!MathKit.isBSO(tData))
-                    if(MathKit.isMBF(tData))
+                if(!MathKit.isBSO(tData.data))
+                    if(MathKit.isMBF(tData.data))
                     {
-                        if(!MathKit.isUnbounded(tData))
-                            piv = MathKit.findIdealMBFPivot(tData);
+                        if(!MathKit.isUnbounded(tData.data))
+                            piv = MathKit.findIdealMBFPivot(tData.data);
                     }
 
                     else
-                        if(!MathKit.isInfeasible(tData))
-                            piv = MathKit.findIdealMBPivot(tData);
+                        if(!MathKit.isInfeasible(tData.data))
+                            piv = MathKit.findIdealMBPivot(tData.data);
 
                 if(piv.i >= 0 && piv.j >= 0)
                     System.out.printf("The best probable pivot is the %s at "
@@ -133,8 +133,8 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             @Override
             public void event()
             {
-                Rational[][] tData = tableau1.getData();
-                tableau1.setData(MathKit.convertToMBF(tData));
+                DataSet tData = tableau1.getData();
+                tableau1.setData(new DataSet(MathKit.convertToMBF(tData.data)));
 
                 if(_original == null)
                     _original = tData;
@@ -151,8 +151,8 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             @Override
             public void event()
             {
-                Rational[][] tData = tableau1.getData();
-                tableau1.setData(MathKit.negativeTranspose(tData));
+                DataSet tData = tableau1.getData();
+                tableau1.setData(new DataSet(MathKit.negativeTranspose(tData.data)));
 
                 if(_original == null)
                     _original = tData;
@@ -169,8 +169,8 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             @Override
             public void event()
             {
-                Rational[][] tData = tableau1.getData();
-                tableau1.setData(MathKit.dantzigSimplexAlgorithm(tData, false));
+                DataSet tData = tableau1.getData();
+                tableau1.setData(new DataSet(MathKit.dantzigSimplexAlgorithm(tData.data, false)));
 
                 if(_original == null)
                     _original = tData;
