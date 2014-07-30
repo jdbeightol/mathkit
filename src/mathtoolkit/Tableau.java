@@ -17,8 +17,8 @@ public class Tableau extends JTable
     public static class TableauModel extends DefaultTableModel
     {
         private boolean             isTableEditable;
-        private final String[][]    maxVariables = new String[2][],
-                                    minVariables = new String[2][];
+        private final String[][]    mxVar = new String[2][],
+                                    mnVar = new String[2][];
         
         public TableauModel()
         {
@@ -38,10 +38,10 @@ public class Tableau extends JTable
             
             if(data != null)
             {
-                maxVariables[0] = new String[data.length];
-                maxVariables[1] = new String[(data.length > 0)?data[0].length:0];
-                minVariables[0] = new String[data.length];
-                minVariables[1] = new String[(data.length > 0)?data[0].length:0];
+                mxVar[0] = new String[data.length];
+                mxVar[1] = new String[(data.length > 0)?data[0].length:0];
+                mnVar[0] = new String[data.length];
+                mnVar[1] = new String[(data.length > 0)?data[0].length:0];
             }
         }
         
@@ -50,17 +50,17 @@ public class Tableau extends JTable
             super(rowCount, columnCount);
             isTableEditable = true;
             
-            maxVariables[0] = new String[columnCount];
-            maxVariables[1] = new String[rowCount];
-            minVariables[0] = new String[columnCount];
-            minVariables[1] = new String[rowCount];
+            mxVar[0] = new String[columnCount];
+            mxVar[1] = new String[rowCount];
+            mnVar[0] = new String[columnCount];
+            mnVar[1] = new String[rowCount];
         }
         
         public String[][] getMaxVariables()
-        {   return maxVariables;    }
+        {   return mxVar;    }
 
         public String[][] getMinVariables()
-        {   return minVariables;    }
+        {   return mnVar;    }
 
         public void setTableEditable(boolean editable)
         {    isTableEditable = editable;    }
@@ -94,7 +94,7 @@ public class Tableau extends JTable
         setCellEditor(new TableauCellEditor());
         initTabBehavior();
     }
-        
+    
     @Override
     public void changeSelection(final int row, final int column, boolean toggle, boolean extend)
     {    changeSelection(row, column, toggle, extend, false);    }
@@ -108,7 +108,7 @@ public class Tableau extends JTable
             editCellAt(row, column);
             
             if(getCellEditor(row, column) != null)
-                ((JTextField)cellEditor.getTableCellEditorComponent(this, 
+                ((JTextField)cellEditor.getTableCellEditorComponent(this,
                         getValueAt(row, column), true, row, column))
                         .selectAll();
         }
@@ -116,58 +116,52 @@ public class Tableau extends JTable
         transferFocus();
     }
     
-    public Rational[][] getData() throws NumberFormatException, NullPointerException
+    public DataSet getData() throws NumberFormatException, NullPointerException
     {
+        DataSet tableauData = new DataSet();
         TableauModel t = (TableauModel)getModel();
         
-        Rational[][] tableauData = new Rational[t.getRowCount()][t.getColumnCount()];
+        Rational[][] tData = new Rational[t.getRowCount()][t.getColumnCount()];
         
         for(int i = 0 ; i < t.getRowCount() ; i++)
             for (int j = 0 ; j < t.getColumnCount(); j++)
-                    tableauData[i][j] = new Rational((String)t.getValueAt(i, j));
+                    tData[i][j] = new Rational((String)t.getValueAt(i, j));
+        
+        tableauData.data = tData;
+        tableauData.maxVariables = t.mxVar[0];
+        tableauData.maxSlackVars = t.mxVar[1];
+        tableauData.minVariables = t.mnVar[0];
+        tableauData.minSlackVars = t.mnVar[1];
         
         return tableauData;
     }
     
-    public void setData(Rational[][] tableauData)
+    public void setData(DataSet tableauData)
     {
-        TableauModel model;
-        int columns = tableauData[0].length;
+        int columns = tableauData.data[0].length;
+        TableauModel t;
         
-        model = new Tableau.TableauModel(new Object[][] {}, new String[columns]);
+        t = new Tableau.TableauModel(new Object[][] {}, new String[columns]);
         
-        for(Rational[] r : tableauData)
+        t.mxVar[0] = tableauData.maxVariables;
+        t.mxVar[1] = tableauData.maxSlackVars;
+        t.mnVar[0] = tableauData.minVariables;
+        t.mnVar[1] = tableauData.minSlackVars;
+        
+        for(Rational[] r : tableauData.data)
         {
             String s[] = new String[r.length];
             
             for(int n = 0; n < r.length; n++)
                 s[n] = r[n].toString();
                 
-            model.addRow(s);
+            t.addRow(s);
         }
         
-        this.setModel(model);
+        this.setModel(t);
     }
-    
-    public String[][] getAllMaxVariables()
-    {   return ((TableauModel)getModel()).getMaxVariables();    }
-    
-    public String[] getMaxVariables()
-    {   return ((TableauModel)getModel()).getMaxVariables()[0];    }
 
-    public String[] getMaxSlackVariables()
-    {   return ((TableauModel)getModel()).getMaxVariables()[1];    }
-
-    public String[][] getAllMinVariables()
-    {   return ((TableauModel)getModel()).getMinVariables();    }
-    
-    public String[] minMaxVariables()
-    {   return ((TableauModel)getModel()).getMinVariables()[0];    }
-
-    public String[] getMinSlackVariables()
-    {   return ((TableauModel)getModel()).getMinVariables()[1];    }
-
-        private void initTabBehavior() 
+    private void initTabBehavior() 
     {
         getActionMap().put(getInputMap(
                 Tableau.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).get(
