@@ -10,6 +10,8 @@ public class Form_Tableau extends javax.swing.JInternalFrame
     
     private abstract class ErrorCheck
     {
+        public abstract void event();
+
         public void doEvents()
         {
             try
@@ -34,8 +36,6 @@ public class Form_Tableau extends javax.swing.JInternalFrame
                         "Empty Cell", JOptionPane.ERROR_MESSAGE);
             }    
         }
-        
-        public abstract void event();
     }
     
     public Form_Tableau()
@@ -60,8 +60,9 @@ public class Form_Tableau extends javax.swing.JInternalFrame
     {
         if(_original != null)
             tableau1.setData(_original);
+        else
+            System.out.println("There is no original tableau to which to revert.");
     }
-    
     
     private void pivot()
     {
