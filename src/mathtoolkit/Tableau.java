@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class Tableau extends JTable
 {
-    protected boolean wasEdit = false;
+    protected boolean wasEdit;
     
     public static class Point
     {
@@ -64,7 +64,9 @@ public class Tableau extends JTable
     public Tableau()
     {
         super();
-        this.setTableHeader(null);
+        
+        wasEdit = false;
+        setTableHeader(null);
         setCellEditor(new TableauCellEditor());
         initTabBehavior();
     }

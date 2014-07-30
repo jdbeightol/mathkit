@@ -71,7 +71,7 @@ public class Form_Main extends javax.swing.JFrame
     
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem1ActionPerformed
     {//GEN-HEADEREND:event_jMenuItem1ActionPerformed
-        new Form_TableauSize(this, this.desktopPane, false).setVisible(true);
+        new Form_NewTableau(this, this.desktopPane, false).setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
     
     public static void main(String args[]) {

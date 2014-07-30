@@ -3,22 +3,23 @@ package mathtoolkit;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDesktopPane;
 
-public class Form_TableauSize extends javax.swing.JDialog
+public class Form_NewTableau extends javax.swing.JDialog
 {
     private final JDesktopPane desktopParent;
     
-    public Form_TableauSize(java.awt.Frame parent, JDesktopPane dp, boolean modal)
+    public Form_NewTableau(java.awt.Frame parent, JDesktopPane dp, boolean modal)
     {
         super(parent, modal);
+        
         initComponents();
         desktopParent = dp;
         
-        this.setLocationRelativeTo(null);
+        setLocationRelativeTo(dp);
         
-        initLists();
+        initComboBoxes();
     }
     
-    private void initLists()
+    private void initComboBoxes()
     {
         DefaultComboBoxModel cmb1 = new DefaultComboBoxModel();
         DefaultComboBoxModel cmb2 = new DefaultComboBoxModel();
@@ -126,7 +127,7 @@ public class Form_TableauSize extends javax.swing.JDialog
         Form_Tableau a = new Form_Tableau((int)jComboBox1.getSelectedItem(), 
                 (int)jComboBox2.getSelectedItem());
         
-        this.desktopParent.add(a);
+        desktopParent.add(a);
         a.setVisible(true);
         
         this.dispose();
