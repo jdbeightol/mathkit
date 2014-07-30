@@ -14,30 +14,54 @@ public class Tableau extends JTable
 {
     protected boolean wasEdit;
     
-    public static class Point
-    {
-        int i, j;
-        
-        public Point()
-        {    i = j = 0;    }
-        
-        public Point(int i, int j)
-        {   this.i = i; this.j = j;   }
-    }
-    
     public static class TableauModel extends DefaultTableModel
     {
-        private boolean isTableEditable = true;
+        private boolean             isTableEditable;
+        private final String[][]    maxVariables = new String[2][],
+                                    minVariables = new String[2][];
         
         public TableauModel()
-        {   super();    }
+        {
+            super();
+            isTableEditable = true;
+        }
         
+        public TableauModel(Object[][] data)
+        {
+            this(data, null);   
+        }
+
         public TableauModel(Object[][] data, Object[] columnNames)
-        {    super(data, columnNames);  }
+        {
+            super(data, columnNames);
+            isTableEditable = true;
+            
+            if(data != null)
+            {
+                maxVariables[0] = new String[data.length];
+                maxVariables[1] = new String[(data.length > 0)?data[0].length:0];
+                minVariables[0] = new String[data.length];
+                minVariables[1] = new String[(data.length > 0)?data[0].length:0];
+            }
+        }
         
         public TableauModel(int rowCount, int columnCount)
-        {    super(rowCount, columnCount);  }
+        {
+            super(rowCount, columnCount);
+            isTableEditable = true;
             
+            maxVariables[0] = new String[columnCount];
+            maxVariables[1] = new String[rowCount];
+            minVariables[0] = new String[columnCount];
+            minVariables[1] = new String[rowCount];
+        }
+        
+        public String[][] getMaxVariables()
+        {   return maxVariables;    }
+
+        public String[][] getMinVariables()
+        {   return minVariables;    }
+
         public void setTableEditable(boolean editable)
         {    isTableEditable = editable;    }
         
@@ -70,7 +94,7 @@ public class Tableau extends JTable
         setCellEditor(new TableauCellEditor());
         initTabBehavior();
     }
-    
+        
     @Override
     public void changeSelection(final int row, final int column, boolean toggle, boolean extend)
     {    changeSelection(row, column, toggle, extend, false);    }
@@ -125,13 +149,31 @@ public class Tableau extends JTable
         this.setModel(model);
     }
     
-    private void initTabBehavior() 
+    public String[][] getAllMaxVariables()
+    {   return ((TableauModel)getModel()).getMaxVariables();    }
+    
+    public String[] getMaxVariables()
+    {   return ((TableauModel)getModel()).getMaxVariables()[0];    }
+
+    public String[] getMaxSlackVariables()
+    {   return ((TableauModel)getModel()).getMaxVariables()[1];    }
+
+    public String[][] getAllMinVariables()
+    {   return ((TableauModel)getModel()).getMinVariables();    }
+    
+    public String[] minMaxVariables()
+    {   return ((TableauModel)getModel()).getMinVariables()[0];    }
+
+    public String[] getMinSlackVariables()
+    {   return ((TableauModel)getModel()).getMinVariables()[1];    }
+
+        private void initTabBehavior() 
     {
         getActionMap().put(getInputMap(
                 Tableau.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).get(
                         KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0)),
-                new AbstractAction() {
-            
+                new AbstractAction() 
+        {    
             @Override
             public void actionPerformed(ActionEvent e) 
             {
