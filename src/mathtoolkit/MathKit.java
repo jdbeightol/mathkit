@@ -404,9 +404,9 @@ public class MathKit
         
         if(!in.isMinNull())
             output[0] += String.format(varFormatR, " ");
-
-            else
-            output[lines - 1] += " ";
+        
+        else
+            output[0] += " ";
 
             
         if(!in.isMaxNull())
@@ -422,8 +422,12 @@ public class MathKit
         }
 
         else
+        {
             for(Rational unused : in.data[0])
                 output[0] += String.format(inFormat, " ");
+            
+            output[0] += " ";
+        }
             
         output[0] += "   ";
 
@@ -474,8 +478,12 @@ public class MathKit
         }
 
         else
+        {
             for(Rational unused : in.data[0])
                 output[lines - 1] += String.format(inFormat, " ");
+            
+            output[lines - 1] += " ";
+        }
 
         if(!in.isMaxNull())
             output[lines - 1] += String.format(varFormatL, " ");
