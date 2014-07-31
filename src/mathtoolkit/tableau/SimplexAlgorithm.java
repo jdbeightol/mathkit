@@ -2,7 +2,6 @@ package mathtoolkit.tableau;
 
 import mathtoolkit.base.Point;
 import mathtoolkit.base.Rational;
-import java.util.Arrays;
 import java.util.TreeMap;
 
 public class SimplexAlgorithm
@@ -131,8 +130,8 @@ public class SimplexAlgorithm
         {
             out = new DataSet(new Rational[in.data[0].length][in.data.length]);
 
-            out.maxVariables = Arrays.copyOf(in.minVariables, in.minVariables.length);
-            out.maxSlackVars = Arrays.copyOf(in.minSlackVars, in.minSlackVars.length);
+            System.arraycopy(in.minVariables, 0, out.maxVariables, 0, in.minVariables.length);
+            System.arraycopy(in.minSlackVars, 0, out.maxSlackVars, 0, in.minSlackVars.length);
 
             out.minVariables = null;
             out.minSlackVars = null;
@@ -300,8 +299,8 @@ public class SimplexAlgorithm
             // leaving the signs behind.
             if(!in.isMaxNull())
             {
-                out.maxVariables = Arrays.copyOf(in.maxVariables, in.maxVariables.length);
-                out.maxSlackVars = Arrays.copyOf(in.maxSlackVars, in.maxSlackVars.length);
+                System.arraycopy(in.maxVariables, 0, out.maxVariables, 0, in.maxVariables.length);
+                System.arraycopy(in.maxSlackVars, 0, out.maxSlackVars, 0, in.maxSlackVars.length);
                 
                 out.maxVariables[pv.j] = in.maxSlackVars[pv.i];
                 out.maxSlackVars[pv.i] = in.maxVariables[pv.j];
@@ -309,9 +308,9 @@ public class SimplexAlgorithm
 
             if(!in.isMinNull())
             {
-                out.minVariables = Arrays.copyOf(in.minVariables, in.minVariables.length);
-                out.minSlackVars = Arrays.copyOf(in.minSlackVars, in.minSlackVars.length);
-                
+                System.arraycopy(in.minVariables, 0, out.minVariables, 0, in.minVariables.length);
+                System.arraycopy(in.minSlackVars, 0, out.minSlackVars, 0, in.minSlackVars.length);
+
                 out.minVariables[pv.i] = in.minSlackVars[pv.j];
                 out.minSlackVars[pv.j] = in.minVariables[pv.i];
             }
