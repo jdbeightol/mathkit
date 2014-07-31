@@ -2,7 +2,6 @@ package mathtoolkit;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.Arrays;
 
 import javax.swing.AbstractAction;
 import javax.swing.DefaultCellEditor;
@@ -175,35 +174,57 @@ public class Tableau extends JTable
                 t.setValueAt("1", i, j);
     }
     
-    public void create(int variables, int constraints)
+    public void create(int variables, int constraints, String[] varX, String[] varY)
     {
         DataSet d = new DataSet();
         
         d.data = new Rational[constraints + 1][variables + 1];
-        d.maxVariables = new String[variables + 1];
-        d.maxSlackVars = new String[constraints + 1];
-        d.minVariables = new String[constraints + 1];
-        d.minSlackVars = new String[variables + 1];
         
-        for(int i = 0; i < variables; i++)
-            d.maxVariables[i] = "x" + (1 + i);
+        if(varX != null && !varX[0].equals(""))
+        {
+            d.maxVariables = new String[variables + 1];
+            d.maxSlackVars = new String[constraints + 1];
+            
+            System.arraycopy(varX, 0, d.maxVariables, 0, varX.length);
+            
+            if(varX.length < variables)
+            {
+                d.maxVariables[varX.length - 1] += "1";
+                
+                for(int i = varX.length; i < variables; i++)
+                    d.maxVariables[i] = varX[varX.length - 1] + (2 + i - varX.length);
+            }
+            
+            d.maxVariables[variables] = "-1";
+            
+            for(int i = 0; i < constraints; i++)    
+                d.maxSlackVars[i] = "t" + (1 + i);
+            
+            d.maxSlackVars[constraints] = "f";
+        }
         
-        d.maxVariables[variables] = "-1";
-        
-        for(int i = 0; i < constraints; i++)
-            d.minVariables[i] = "y" + (1 + i);
-        
-        d.minVariables[constraints] = "-1";
-        
-        for(int i = 0; i < constraints; i++)
-            d.maxSlackVars[i] = "t" + (1 + i);
-        
-        d.maxSlackVars[constraints] = "f";
-        
-        for(int i = 0; i < variables; i++)
-            d.minSlackVars[i] = "s" + (1 + i);
-        
-        d.minSlackVars[variables] = "g";
+        if(varY != null && !varY[0].equals(""))
+        {
+            d.minVariables = new String[constraints + 1];
+            d.minSlackVars = new String[variables + 1];
+            
+            System.arraycopy(varY, 0, d.minVariables, 0, varY.length);
+            
+            if(varY.length < variables)
+            {
+                d.minVariables[varY.length - 1] += "1";
+                
+                for(int i = varY.length; i < variables; i++)
+                    d.minVariables[i] = varY[varY.length - 1] + (2 + i - varY.length);
+            }
+            
+            d.minVariables[constraints] = "-1";
+            
+            for(int i = 0; i < variables; i++)
+                d.minSlackVars[i] = "s" + (1 + i);
+            
+            d.minSlackVars[variables] = "g";
+        }
         
         setData(d);
     }

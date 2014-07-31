@@ -18,7 +18,10 @@ public class Form_Main extends javax.swing.JFrame
         
         if(_DEBUG)
         {
-            Form_Tableau test = new Form_Tableau(2, 2);
+            String[] X = {"x"},
+                     Y = {"y"};
+            
+            Form_Tableau test = new Form_Tableau(2, 2, X, Y);
             this.desktopPane.add(test);
             test.setVisible(true);
         }

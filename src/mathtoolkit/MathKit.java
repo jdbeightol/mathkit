@@ -67,19 +67,19 @@ public class MathKit
         if(!isBSO(in))
             if(!isMBF(in))
                 if(isInfeasible(in))
-                    System.out.println("The tableau is infeasible.");
+                    System.out.println("The problem is infeasible.");
                 
                 else
-                    System.out.println("The tableau is not in Maximum Basic "
+                    System.out.println("The problem is not in Maximum Basic "
                             + "Feasible form.");               
             
             else
                 if(isUnbounded(in))
-                    System.out.println("The tableau is unbounded.");
+                    System.out.println("The problem is unbounded.");
                 
                 else
-                    System.out.println("The problem is in Maximum Basic "
-                            + "Feasible form and is bounded.");
+                    System.out.println("The problem is assumed to be in Maximum "
+                            + "Basic Feasible form and is bounded.");
         
         else
             System.out.println("The basic solution of the current tableau is "
@@ -128,8 +128,8 @@ public class MathKit
         {
             out = new DataSet(new Rational[in.data[0].length][in.data.length]);
 
-            out.maxVariables = in.minVariables;
-            out.maxSlackVars = in.minSlackVars;
+            out.maxVariables = Arrays.copyOf(in.minVariables, in.minVariables.length);
+            out.maxSlackVars = Arrays.copyOf(in.minSlackVars, in.minSlackVars.length);
 
             out.minVariables = null;
             out.minSlackVars = null;

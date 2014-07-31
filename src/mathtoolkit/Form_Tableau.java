@@ -1,10 +1,12 @@
 package mathtoolkit;
 
+import java.util.Stack;
 import javax.swing.JOptionPane;
 
 public class Form_Tableau extends javax.swing.JInternalFrame
 {
     private static int FRAMECOUNT = 0;
+    private Stack<DataSet> _history;
     private DataSet _original;
     
     private abstract class ErrorCheck
@@ -26,34 +28,39 @@ public class Form_Tableau extends javax.swing.JInternalFrame
                         "Invalid Tableau Entry",
                         JOptionPane.ERROR_MESSAGE);
             }
-
+            
+            /*
             catch(java.lang.NullPointerException e)
             {
                 System.err.println("[Error] " + e.getLocalizedMessage());
                 JOptionPane.showMessageDialog(null, "Please enter a value in each"
                         + " tableau entry.",
                         "Empty Cell", JOptionPane.ERROR_MESSAGE);
-            }    
+            }*/
         }
     }
     
     public Form_Tableau()
-    {    this(2, 2);    }
-    
-    public Form_Tableau(int variables, int constraints)
     {
         super("Simplex Tableau " + ++FRAMECOUNT, true, true, true, true);
         initComponents();
-        tableau1.create(variables, constraints);
+        _history = new Stack<>();
+        setLocation(45 * (FRAMECOUNT % 10), 45 * (FRAMECOUNT % 10));
+    }
+    
+    public Form_Tableau(int variables, int constraints, String[] varX, String[] varY)
+    {
+        this();
+        tableau1.create(variables, constraints, varX, varY);
         
         if(Form_Main._DEBUG)
-            tableau1.debugFill();
-        
-        setLocation(45 * (FRAMECOUNT % 10), 45 * (FRAMECOUNT % 10));
+            tableau1.debugFill();        
     }
     
     private void revertToOriginal()
     {
+        addHistory(tableau1.getData());
+        
         if(_original != null)
             tableau1.setData(_original);
         
@@ -61,6 +68,31 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             System.out.println("There is no original tableau to which to revert.");
     }
     
+    private void undo()
+    {
+        if(!_history.isEmpty())
+            tableau1.setData(_history.pop());
+        
+        else
+            System.out.println("There is no history to undo tableau to which to revert.");
+        
+        if(_history.isEmpty())
+            jMenuItem8.setEnabled(false);
+    }
+    
+    private void addHistory(DataSet ds)
+    {
+        _history.add(ds);
+
+        if(_original == null)
+            _original = ds;
+        
+        jMenuItem7.setEnabled(true);
+        
+        if(!_history.isEmpty())
+            jMenuItem8.setEnabled(true);
+    }
+        
     private void checkTableauState()
     {
         new ErrorCheck()
@@ -84,9 +116,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
                 tableau1.setData(MathKit.pivotTransform(tData, new Point(
                         tableau1.getSelectedRow(), tableau1.getSelectedColumn())
                 ));
-                
-                if(_original == null)
-                    _original = tData;    
+                addHistory(tData);                
             }
         }.doEvents();
     }
@@ -134,9 +164,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
                 DataSet tData = tableau1.getData();
                 tableau1.setData(MathKit.convertToMBF(tData));
 
-                if(_original == null)
-                    _original = tData;
-
+                addHistory(tData);
                 checkTableauState();
             }
         }.doEvents();
@@ -152,9 +180,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
                 DataSet tData = tableau1.getData();
                 tableau1.setData(MathKit.negativeTranspose(tData));
 
-                if(_original == null)
-                    _original = tData;
-
+                addHistory(tData);
                 checkTableauState();
             }
         }.doEvents();
@@ -170,8 +196,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
                 DataSet tData = tableau1.getData();
                 tableau1.setData(MathKit.dantzigSimplexAlgorithm(tData, false));
 
-                if(_original == null)
-                    _original = tData;
+                addHistory(tData);
             }
         }.doEvents();
     }
@@ -199,8 +224,9 @@ public class Form_Tableau extends javax.swing.JInternalFrame
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
-        jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem6 = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem8 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableau1 = new mathtoolkit.Tableau();
@@ -254,7 +280,6 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             }
         });
         jPopupMenu1.add(jMenuItem5);
-        jPopupMenu1.add(jSeparator1);
 
         jMenuItem6.setText("Solve");
         jMenuItem6.addActionListener(new java.awt.event.ActionListener()
@@ -265,8 +290,21 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             }
         });
         jPopupMenu1.add(jMenuItem6);
+        jPopupMenu1.add(jSeparator1);
+
+        jMenuItem8.setText("Undo");
+        jMenuItem8.setEnabled(false);
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(jMenuItem8);
 
         jMenuItem7.setText("Revert to Original");
+        jMenuItem7.setEnabled(false);
         jMenuItem7.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -364,6 +402,11 @@ public class Form_Tableau extends javax.swing.JInternalFrame
     {//GEN-HEADEREND:event_tableau1MouseReleased
         showPivotMenu(evt);        
     }//GEN-LAST:event_tableau1MouseReleased
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem8ActionPerformed
+    {//GEN-HEADEREND:event_jMenuItem8ActionPerformed
+        undo();
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem jMenuItem1;
@@ -373,6 +416,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
