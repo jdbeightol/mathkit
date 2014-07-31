@@ -103,7 +103,7 @@ public class MathKit
         if(!isMBF(out.data))
             out = convertToMBF(out);  
         
-        // If the tableau is not in BSO form, check pivot until it is.  
+        // If the tableau is not in BSO form, pivot until it is.  
         // Unboundedness is detected here.
         if(!isInfeasible(out.data))
             while(!isBSO(out.data) && findIdealMBFPivot(out.data).i >= 0)
@@ -373,7 +373,7 @@ public class MathKit
                 output = String.format("%s ", in.data[row][i].toString());
             
             else if(i == in.data[row].length - 1)
-                output += String.format("= %s");
+                output += String.format("= %s", in.data[row][i].toString());
             
             else
                 output += String.format("%s %s ", sign, value);
