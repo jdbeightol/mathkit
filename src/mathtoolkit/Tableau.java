@@ -117,7 +117,7 @@ public class Tableau extends JTable
         transferFocus();
     }
     
-    public DataSet getData() throws NumberFormatException, NullPointerException
+    public DataSet getData() throws NumberFormatException
     {
         DataSet tableauData = new DataSet();
         TableauModel t = (TableauModel)getModel();
@@ -126,7 +126,11 @@ public class Tableau extends JTable
         
         for(int i = 0 ; i < t.getRowCount() ; i++)
             for (int j = 0 ; j < t.getColumnCount(); j++)
-                    tData[i][j] = new Rational((String)t.getValueAt(i, j));
+                    tData[i][j] = new Rational(
+                            (t.getValueAt(i, j) == null
+                                    || ((String)t.getValueAt(i, j)).equals(""))
+                                    ?"0":(String)t.getValueAt(i, j)
+                    );
         
         tableauData.data = tData;
         tableauData.maxVariables = t.mxVar[0];
@@ -162,6 +166,48 @@ public class Tableau extends JTable
         this.setModel(t);
     }
     
+    public void debugFill()
+    {
+        TableauModel t = (TableauModel)getModel();
+
+        for(int i = 0; i < t.getRowCount(); i++)
+            for(int j = 0; j < t.getColumnCount(); j++)
+                t.setValueAt("1", i, j);
+    }
+    
+    public void create(int variables, int constraints)
+    {
+        DataSet d = new DataSet();
+        
+        d.data = new Rational[constraints + 1][variables + 1];
+        d.maxVariables = new String[variables + 1];
+        d.maxSlackVars = new String[constraints + 1];
+        d.minVariables = new String[constraints + 1];
+        d.minSlackVars = new String[variables + 1];
+        
+        for(int i = 0; i < variables; i++)
+            d.maxVariables[i] = "x" + (1 + i);
+        
+        d.maxVariables[variables] = "-1";
+        
+        for(int i = 0; i < constraints; i++)
+            d.minVariables[i] = "y" + (1 + i);
+        
+        d.minVariables[constraints] = "-1";
+        
+        for(int i = 0; i < constraints; i++)
+            d.maxSlackVars[i] = "t" + (1 + i);
+        
+        d.maxSlackVars[constraints] = "f";
+        
+        for(int i = 0; i < variables; i++)
+            d.minSlackVars[i] = "s" + (1 + i);
+        
+        d.minSlackVars[variables] = "g";
+        
+        setData(d);
+    }
+        
     private void initTabBehavior() 
     {
         getActionMap().put(getInputMap(

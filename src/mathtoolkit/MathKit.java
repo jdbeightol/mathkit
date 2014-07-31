@@ -428,9 +428,9 @@ public class MathKit
             
             output[0] += " ";
         }
-            
+        
         output[0] += "   ";
-
+        
         // Generate the tableau's data.
         for(int i = 0; i < lines - 2; i++)
         {

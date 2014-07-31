@@ -44,42 +44,12 @@ public class Form_Tableau extends javax.swing.JInternalFrame
     {
         super("Simplex Tableau " + ++FRAMECOUNT, true, true, true, true);
         initComponents();
-        initTableau(variables, constraints);
+        tableau1.create(variables, constraints);
+        
+        if(Form_Main._DEBUG)
+            tableau1.debugFill();
         
         setLocation(45 * (FRAMECOUNT % 10), 45 * (FRAMECOUNT % 10));
-    }
-    
-    private void initTableau(int variables, int constraints)
-    {
-        DataSet d = new DataSet();
-
-        d.data = new Rational[constraints + 1][variables + 1];
-        d.maxVariables = new String[variables + 1];
-        d.maxSlackVars = new String[constraints + 1];
-        d.minVariables = new String[constraints + 1];
-        d.minSlackVars = new String[variables + 1];
-        
-        for(int i = 0; i < variables; i++)
-            d.maxVariables[i] = "x" + (1 + i);
-        
-        d.maxVariables[variables] = "-1";
-        
-        for(int i = 0; i < constraints; i++)
-            d.minVariables[i] = "y" + (1 + i);
-        
-        d.minVariables[constraints] = "-1";
-
-        for(int i = 0; i < constraints; i++)
-            d.maxSlackVars[i] = "t" + (1 + i);
-
-        d.maxSlackVars[constraints] = "f";
-        
-        for(int i = 0; i < variables; i++)
-            d.minSlackVars[i] = "s" + (1 + i);
-
-        d.minSlackVars[variables] = "g";
-
-        tableau1.setData(d);        
     }
     
     private void revertToOriginal()
