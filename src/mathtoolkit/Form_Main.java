@@ -1,7 +1,20 @@
 package mathtoolkit;
 
-import mathtoolkit.tableau.Form_Tableau;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
+
+import java.beans.PropertyVetoException;
+
+import java.util.Arrays;
+import java.util.TreeMap;
+
+import javax.swing.JInternalFrame;
+import javax.swing.JMenuItem;
+
 import mathtoolkit.tableau.Form_NewTableau;
+import mathtoolkit.tableau.Form_Tableau;
 
 public class Form_Main extends javax.swing.JFrame
 {
@@ -13,10 +26,25 @@ public class Form_Main extends javax.swing.JFrame
         setExtendedState(getExtendedState()|javax.swing.JFrame.MAXIMIZED_BOTH);
         initComponents();
         
+        desktopPane.addContainerListener(new ContainerListener()
+        {
+            @Override
+            public void componentAdded(ContainerEvent e)
+            {
+                updateWindowList();
+            }
+            
+            @Override
+            public void componentRemoved(ContainerEvent e)
+            {
+                updateWindowList();
+            }
+        });
+        
         setLocationRelativeTo(null);
         
         _CONSOLE = new Form_Console();
-        this.desktopPane.add(_CONSOLE);
+        desktopPane.add(_CONSOLE);
         _CONSOLE.setVisible(true);
         
         if(_DEBUG)
@@ -25,11 +53,52 @@ public class Form_Main extends javax.swing.JFrame
                      Y = {"y"};
             
             Form_Tableau test = new Form_Tableau(2, 2, X, Y);
-            this.desktopPane.add(test);
+            desktopPane.add(test);
             test.setVisible(true);
         }
         
         System.out.println("To begin, choose an item from the menu above.");
+    }
+    
+    private void updateWindowList()
+    {
+        jMenu3.removeAll();
+        
+        TreeMap<String, JInternalFrame> tm = new TreeMap<>();
+        
+        for(final JInternalFrame f : desktopPane.getAllFrames())
+            tm.put(f.getTitle(), f);
+        
+        for(String s : tm.keySet())
+        {
+            final JInternalFrame f = tm.get(s);
+            JMenuItem winMenu = new JMenuItem();
+            
+            winMenu.setText(s);
+            
+            winMenu.addActionListener(new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    try
+                    {
+                        if(f.isIcon())
+                            f.setIcon(false);
+                        
+                        f.moveToFront();
+                        f.setSelected(true);
+                    }
+                    
+                    catch(PropertyVetoException ex)
+                    {
+                        System.err.println(Arrays.toString(ex.getStackTrace()));
+                    }
+                }
+            });
+            
+            jMenu3.add(winMenu);
+        }
     }
     
     @SuppressWarnings("unchecked")
@@ -41,6 +110,9 @@ public class Form_Main extends javax.swing.JFrame
         menuBar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Jimkit");
@@ -59,17 +131,34 @@ public class Form_Main extends javax.swing.JFrame
 
         menuBar.add(jMenu1);
 
+        jMenu2.setText("Window");
+
+        jMenuItem2.setText("Pop Out Console");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem2);
+
+        jMenu3.setText("Window List");
+        jMenu2.add(jMenu3);
+
+        menuBar.add(jMenu2);
+
         setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 747, Short.MAX_VALUE)
+            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE)
         );
 
         pack();
@@ -79,6 +168,11 @@ public class Form_Main extends javax.swing.JFrame
     {//GEN-HEADEREND:event_jMenuItem1ActionPerformed
         new Form_NewTableau(this, this.desktopPane, false).setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem2ActionPerformed
+    {//GEN-HEADEREND:event_jMenuItem2ActionPerformed
+        _CONSOLE.popout();
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
     
     public static boolean debug()
     {   return _DEBUG;    }
@@ -123,7 +217,10 @@ public class Form_Main extends javax.swing.JFrame
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuBar menuBar;
     // End of variables declaration//GEN-END:variables
 }
