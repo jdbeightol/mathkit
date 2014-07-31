@@ -67,19 +67,20 @@ public class MathKit
         if(!isBSO(in.data))
             if(!isMBF(in.data))
                 if(isInfeasible(in.data))
-                    System.out.println("The problem is infeasible.");
+                    System.out.println("The tableau is infeasible.");
                 
                 else
-                    System.out.println("The problem is not in Maximum Basic "
+                    System.out.println("The tableau is not in Maximum Basic "
                             + "Feasible form.");               
             
             else
                 if(isUnbounded(in.data))
-                    System.out.println("The problem is unbounded.");
+                    System.out.println("The tableau is unbounded.");
                 
                 else
-                    System.out.println("The problem is assumed to be in Maximum "
-                            + "Basic Feasible form and is bounded.");
+                    System.out.println("The tableau is assumed to be in Maximum "
+                            + "Basic form and is currently both feasible and "
+                            + "bounded.");
         
         else
             System.out.printf("The basic solution of the current tableau is "
