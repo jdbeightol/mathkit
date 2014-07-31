@@ -495,13 +495,19 @@ public class MathKit
         
         return output;
     }
+    
+    public static void printTableau(String title, DataSet in)
+    {
+        String[] output = formatTableau(in);
+        
+        System.out.println(title);
+        
+        for(String o : output)
+            System.out.println(o);
 
-    public static void printTableauTransform(String title, Rational[][] in, Rational[][] out)
-    {   printTableauTransform(title, in, out, new Point(-1, -1));    }
-    
-    public static void printTableauTransform(String title, Rational[][] in, Rational[][] out, Point p)
-    {   printTableauTransform(title, new DataSet(in), new DataSet(out), p);    }
-    
+        System.out.println();
+    }
+
     public static void printTableauTransform(String title, DataSet in, DataSet out)
     {   printTableauTransform(title, in, out, new Point(-1, -1));    }
     
@@ -542,7 +548,7 @@ public class MathKit
                 output[i] += String.format(outFormat, "");
         }
 
-        System.out.printf("%s:\n", title);
+        System.out.println(title);
         
         for(String o : output)
             if(!o.equals(""))

@@ -92,7 +92,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
         if(!_history.isEmpty())
             jMenuItem8.setEnabled(true);
     }
-        
+
     private void checkTableauState()
     {
         new ErrorCheck()
@@ -100,6 +100,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             @Override
             public void event()
             {
+                MathKit.printTableau("Current Tableau", tableau1.getData());
                 MathKit.checkState(tableau1.getData().data);
             }
         }.doEvents();
@@ -149,8 +150,8 @@ public class Form_Tableau extends javax.swing.JInternalFrame
                             piv.i + 1, piv.j + 1);
                 
                 else
-                    checkTableauState();
-                    }
+                    MathKit.checkState(tableau1.getData().data);
+            }
         }.doEvents();
     }
     
@@ -165,7 +166,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
                 tableau1.setData(MathKit.convertToMBF(tData));
 
                 addHistory(tData);
-                checkTableauState();
+                MathKit.checkState(tableau1.getData().data);                
             }
         }.doEvents();
     }
@@ -181,7 +182,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
                 tableau1.setData(MathKit.negativeTranspose(tData));
 
                 addHistory(tData);
-                checkTableauState();
+                MathKit.checkState(tableau1.getData().data);
             }
         }.doEvents();
     }
