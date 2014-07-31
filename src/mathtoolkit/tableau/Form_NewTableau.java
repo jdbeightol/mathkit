@@ -1,4 +1,4 @@
-package mathtoolkit;
+package mathtoolkit.tableau;
 
 import java.util.StringTokenizer;
 import javax.swing.DefaultComboBoxModel;

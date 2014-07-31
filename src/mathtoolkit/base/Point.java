@@ -1,8 +1,8 @@
-package mathtoolkit;
+package mathtoolkit.base;
 
 public class Point
 {
-    int i, j;
+    public int i, j;
 
     public Point()
     {    i = j = 0;    }

@@ -1,9 +1,11 @@
-package mathtoolkit;
+package mathtoolkit.tableau;
 
+import mathtoolkit.base.Point;
+import mathtoolkit.base.Rational;
 import java.util.Arrays;
 import java.util.TreeMap;
 
-public class MathKit
+public class SimplexAlgorithm
 {
     public static boolean isMBF(Rational[][] in)
     {

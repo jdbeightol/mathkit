@@ -1,7 +1,10 @@
-package mathtoolkit;
+package mathtoolkit.tableau;
+
+import mathtoolkit.base.Point;
 
 import java.util.Stack;
 import javax.swing.JOptionPane;
+import mathtoolkit.Form_Main;
 
 public class Form_Tableau extends javax.swing.JInternalFrame
 {
@@ -53,7 +56,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
         this();
         tableau1.create(variables, constraints, varX, varY);
         
-        if(Form_Main._DEBUG)
+        if(Form_Main.debug())
             tableau1.debugFill();        
     }
     
@@ -100,8 +103,8 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             @Override
             public void event()
             {
-                MathKit.printTableau("Current Tableau", tableau1.getData());
-                MathKit.checkState(tableau1.getData());
+                SimplexAlgorithm.printTableau("Current Tableau", tableau1.getData());
+                SimplexAlgorithm.checkState(tableau1.getData());
             }
         }.doEvents();
     }
@@ -114,7 +117,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             public void event()
             {
                 DataSet tData = tableau1.getData();
-                tableau1.setData(MathKit.pivotTransform(tData, new Point(
+                tableau1.setData(SimplexAlgorithm.pivotTransform(tData, new Point(
                         tableau1.getSelectedRow(), tableau1.getSelectedColumn())
                 ));
                 addHistory(tData);                
@@ -132,16 +135,16 @@ public class Form_Tableau extends javax.swing.JInternalFrame
                 DataSet tData = tableau1.getData();
                 Point piv = new Point(-1, -1);
                 
-                if(!MathKit.isBSO(tData.data))
-                    if(MathKit.isMBF(tData.data))
+                if(!SimplexAlgorithm.isBSO(tData.data))
+                    if(SimplexAlgorithm.isMBF(tData.data))
                     {
-                        if(!MathKit.isUnbounded(tData.data))
-                            piv = MathKit.findIdealMBFPivot(tData.data);
+                        if(!SimplexAlgorithm.isUnbounded(tData.data))
+                            piv = SimplexAlgorithm.findIdealMBFPivot(tData.data);
                     }
                     
                     else
-                        if(!MathKit.isInfeasible(tData.data))
-                            piv = MathKit.findIdealMBPivot(tData.data);
+                        if(!SimplexAlgorithm.isInfeasible(tData.data))
+                            piv = SimplexAlgorithm.findIdealMBPivot(tData.data);
                 
                 if(piv.i >= 0 && piv.j >= 0)
                     System.out.printf("The best probable pivot is the %s at "
@@ -150,7 +153,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
                             piv.i + 1, piv.j + 1);
                 
                 else
-                    MathKit.checkState(tableau1.getData());
+                    SimplexAlgorithm.checkState(tableau1.getData());
             }
         }.doEvents();
     }
@@ -163,10 +166,10 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             public void event()
             {
                 DataSet tData = tableau1.getData();
-                tableau1.setData(MathKit.convertToMBF(tData));
+                tableau1.setData(SimplexAlgorithm.convertToMBF(tData));
 
                 addHistory(tData);
-                MathKit.checkState(tableau1.getData());                
+                SimplexAlgorithm.checkState(tableau1.getData());                
             }
         }.doEvents();
     }
@@ -179,10 +182,10 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             public void event()
             {
                 DataSet tData = tableau1.getData();
-                tableau1.setData(MathKit.negativeTranspose(tData));
+                tableau1.setData(SimplexAlgorithm.negativeTranspose(tData));
 
                 addHistory(tData);
-                MathKit.checkState(tableau1.getData());
+                SimplexAlgorithm.checkState(tableau1.getData());
             }
         }.doEvents();
     }
@@ -195,7 +198,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             public void event()
             {
                 DataSet tData = tableau1.getData();
-                tableau1.setData(MathKit.dantzigSimplexAlgorithm(tData, min));
+                tableau1.setData(SimplexAlgorithm.dantzigSimplexAlgorithm(tData, min));
 
                 addHistory(tData);
             }
@@ -231,7 +234,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
         jMenuItem8 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableau1 = new mathtoolkit.Tableau();
+        tableau1 = new mathtoolkit.tableau.Tableau();
 
         jMenuItem1.setText("Pivot Here");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener()
@@ -438,6 +441,6 @@ public class Form_Tableau extends javax.swing.JInternalFrame
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
-    private mathtoolkit.Tableau tableau1;
+    private mathtoolkit.tableau.Tableau tableau1;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,11 +1,14 @@
 package mathtoolkit;
 
+import mathtoolkit.tableau.Form_Tableau;
+import mathtoolkit.tableau.Form_NewTableau;
+
 public class Form_Main extends javax.swing.JFrame
 {
-    protected static Form_Console _CONSOLE;
-    protected static boolean _DEBUG = false;
+    private static Form_Console _CONSOLE;
+    private static boolean _DEBUG = false;
     
-    public Form_Main() 
+    public Form_Main()
     {
         setExtendedState(getExtendedState()|javax.swing.JFrame.MAXIMIZED_BOTH);
         initComponents();
@@ -76,6 +79,9 @@ public class Form_Main extends javax.swing.JFrame
     {//GEN-HEADEREND:event_jMenuItem1ActionPerformed
         new Form_NewTableau(this, this.desktopPane, false).setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+    
+    public static boolean debug()
+    {   return _DEBUG;    }
     
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

@@ -1,4 +1,6 @@
-package mathtoolkit;
+package mathtoolkit.tableau;
+
+import mathtoolkit.base.Rational;
 
 public class DataSet
 {

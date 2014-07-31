@@ -1,4 +1,4 @@
-package mathtoolkit;
+package mathtoolkit.base;
 
 public final class Rational
 {
