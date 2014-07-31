@@ -62,11 +62,11 @@ public class MathKit
         return false;
     }
     
-    public static void checkState(Rational[][] in)
+    public static void checkState(DataSet in)
     {
-        if(!isBSO(in))
-            if(!isMBF(in))
-                if(isInfeasible(in))
+        if(!isBSO(in.data))
+            if(!isMBF(in.data))
+                if(isInfeasible(in.data))
                     System.out.println("The problem is infeasible.");
                 
                 else
@@ -74,7 +74,7 @@ public class MathKit
                             + "Feasible form.");               
             
             else
-                if(isUnbounded(in))
+                if(isUnbounded(in.data))
                     System.out.println("The problem is unbounded.");
                 
                 else
@@ -82,8 +82,8 @@ public class MathKit
                             + "Basic Feasible form and is bounded.");
         
         else
-            System.out.println("The basic solution of the current tableau is "
-                    + "optimal.");
+            System.out.printf("The basic solution of the current tableau is "
+                    + "optimal.\n%s\n", formatMaxSolution(in));
 
     }
     
@@ -94,7 +94,7 @@ public class MathKit
         
         // If the problem is exclusively a min problem, get the negative 
         // transposition of it.
-        if(min)
+        if(min || (in.isMaxNull() && !in.isMinNull()))
             out = negativeTranspose(out);
         
         // Convert the tableau to maximum basic feasible form, if it isn't 
@@ -115,7 +115,7 @@ public class MathKit
                 else
                     out = pivotTransform(out, findIdealMBFPivot(out.data));
         
-        checkState(out.data);
+        checkState(out);
         
         return out;
     }
@@ -358,10 +358,66 @@ public class MathKit
         return out;        
     }
     
-    public static String[] formatTableau(DataSet in)
+    private static String formatMaxEquation(DataSet in, int row)
+    {
+        String output = "";
+        
+        for(int i = 0; i < in.data[row].length; i++)
+        {
+            String  sign = (in.data[row][i].getValue() > 0)?"+":"-",
+                    value = (in.data[row][i].getValue() > 0)?
+                        in.data[row][i].toString():in.data[row][i].multiply(-1).toString();
+            
+            if(i == 0)
+                output = String.format("%s ", in.data[row][i].toString());
+            
+            else if(i == in.data[row].length - 1)
+                output += String.format("= %s");
+            
+            else
+                output += String.format("%s %s ", sign, value);
+        }
+        
+        return output;
+    }
+    
+    public static void printMaxEquation(DataSet in, int row)
+    {
+        System.out.println(formatMaxEquation(in, row));
+    }
+    
+    private static String formatMaxSolution(DataSet in)
+    {
+        String output = "";
+        
+        if(!in.isMaxNull())
+        {
+            for(int i = 0; i < in.maxVariables.length - 1; i++)
+                output += String.format("%s = ", in.maxVariables[i]);
+        
+            output += "0, ";
+        
+            for(int i = 0; i < in.maxSlackVars.length - 1; i++)
+                output += String.format("%s = %s, ", in.maxSlackVars[i], 
+                        in.data[i][in.data[i].length - 1].toString());
+        
+            output += String.format("max(%s) = %s", in.maxSlackVars[in.data.length - 1],
+                    in.data[in.data.length - 1][in.data[in.data.length - 1].length - 1]
+                            .multiply(-1).toString());
+        }
+        
+        return output;
+    }
+    
+    public static void printMaxSolution(DataSet in)
+    {
+        System.out.println(formatMaxSolution(in));
+    }
+    
+    private static String[] formatTableau(DataSet in)
     {   return formatTableau(in, new Point(-1, -1));    }
     
-    public static String[] formatTableau(DataSet in, Point p)
+    private static String[] formatTableau(DataSet in, Point p)
     {
         int lines = in.data.length + 2,
             inLength = 0,
