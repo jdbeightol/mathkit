@@ -3,7 +3,10 @@ package mathtoolkit;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+
 import javax.swing.JTextArea;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultCaret;
 
 public class Form_Console extends javax.swing.JInternalFrame
@@ -23,6 +26,22 @@ public class Form_Console extends javax.swing.JInternalFrame
     public Form_Console()
     {
         initComponents();
+        jTextArea1.getDocument().addDocumentListener(new DocumentListener()
+        {
+            @Override
+            public void insertUpdate(DocumentEvent e)
+            {
+                jTextArea1.setCaretPosition(jTextArea1.getText().length());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e){}
+
+            @Override
+            public void changedUpdate(DocumentEvent e){}
+        });
+        
+        
         ((DefaultCaret)jTextArea1.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);        
         
         PrintStream st = new PrintStream(new ConsoleOutputStream(jTextArea1));
