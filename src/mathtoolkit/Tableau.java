@@ -210,11 +210,11 @@ public class Tableau extends JTable
             
             System.arraycopy(varY, 0, d.minVariables, 0, varY.length);
             
-            if(varY.length < variables)
+            if(varY.length < constraints)
             {
                 d.minVariables[varY.length - 1] += "1";
                 
-                for(int i = varY.length; i < variables; i++)
+                for(int i = varY.length; i < constraints; i++)
                     d.minVariables[i] = varY[varY.length - 1] + (2 + i - varY.length);
             }
             
