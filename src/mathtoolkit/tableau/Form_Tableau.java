@@ -30,16 +30,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
                         + "contain numbers, decimals, or front slashes (/).",
                         "Invalid Tableau Entry",
                         JOptionPane.ERROR_MESSAGE);
-            }
-            
-            /*
-            catch(java.lang.NullPointerException e)
-            {
-                System.err.println("[Error] " + e.getLocalizedMessage());
-                JOptionPane.showMessageDialog(null, "Please enter a value in each"
-                        + " tableau entry.",
-                        "Empty Cell", JOptionPane.ERROR_MESSAGE);
-            }*/
+            }            
         }
     }
     

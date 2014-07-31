@@ -87,7 +87,7 @@ public class SimplexAlgorithm
         
         else
             System.out.printf("The basic solution of the current tableau is "
-                    + "optimal.\n%s\n", formatMaxSolution(in));
+                    + "optimal.\n%s\n\n", formatMaxSolution(in));
 
     }
     

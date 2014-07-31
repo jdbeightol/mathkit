@@ -1,6 +1,7 @@
 package mathtoolkit.tableau;
 
 import mathtoolkit.base.Rational;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
