@@ -309,8 +309,8 @@ public class MathKit
                 out.minVariables = Arrays.copyOf(in.minVariables, in.minVariables.length);
                 out.minSlackVars = Arrays.copyOf(in.minSlackVars, in.minSlackVars.length);
                 
-                out.minVariables[pv.j] = in.minSlackVars[pv.i];
-                out.minSlackVars[pv.i] = in.minVariables[pv.j];
+                out.minVariables[pv.i] = in.minSlackVars[pv.j];
+                out.minSlackVars[pv.j] = in.minVariables[pv.i];
             }
             
             // (3) Replace p by 1/p.

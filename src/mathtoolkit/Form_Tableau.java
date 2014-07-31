@@ -187,7 +187,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
         }.doEvents();
     }
     
-    private void solve()
+    private void solve(final boolean min)
     {
         new ErrorCheck()
         {
@@ -195,7 +195,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             public void event()
             {
                 DataSet tData = tableau1.getData();
-                tableau1.setData(MathKit.dantzigSimplexAlgorithm(tData, false));
+                tableau1.setData(MathKit.dantzigSimplexAlgorithm(tData, min));
 
                 addHistory(tData);
             }
@@ -226,6 +226,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem8 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
@@ -282,7 +283,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
         });
         jPopupMenu1.add(jMenuItem5);
 
-        jMenuItem6.setText("Solve");
+        jMenuItem6.setText("Solve Maximum");
         jMenuItem6.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -291,6 +292,16 @@ public class Form_Tableau extends javax.swing.JInternalFrame
             }
         });
         jPopupMenu1.add(jMenuItem6);
+
+        jMenuItem9.setText("Solve Minimum");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(jMenuItem9);
         jPopupMenu1.add(jSeparator1);
 
         jMenuItem8.setText("Undo");
@@ -371,7 +382,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem6ActionPerformed
     {//GEN-HEADEREND:event_jMenuItem6ActionPerformed
-        solve();
+        solve(false);
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem5ActionPerformed
@@ -408,6 +419,11 @@ public class Form_Tableau extends javax.swing.JInternalFrame
     {//GEN-HEADEREND:event_jMenuItem8ActionPerformed
         undo();
     }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem9ActionPerformed
+    {//GEN-HEADEREND:event_jMenuItem9ActionPerformed
+        solve(true);
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem jMenuItem1;
@@ -418,6 +434,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
