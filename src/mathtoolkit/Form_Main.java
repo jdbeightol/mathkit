@@ -58,7 +58,7 @@ public class Form_Main extends javax.swing.JFrame
         }
         
         else
-            jMenu3.setVisible(false);
+            jMenu4.setVisible(false);
         
         System.out.println("To begin, choose an item from the menu above.");
     }
