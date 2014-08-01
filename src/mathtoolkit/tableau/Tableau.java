@@ -1,8 +1,7 @@
 package mathtoolkit.tableau;
 
-import mathtoolkit.base.Rational;
-
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
@@ -12,10 +11,10 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 
+import mathtoolkit.base.Rational;
+
 public class Tableau extends JTable
-{
-    protected boolean wasEdit;
-    
+{  
     public static class TableauModel extends DefaultTableModel
     {
         private boolean             isTableEditable;
@@ -91,10 +90,9 @@ public class Tableau extends JTable
     {
         super();
         
-        wasEdit = false;
         setTableHeader(null);
         setCellEditor(new TableauCellEditor());
-        initTabBehavior();
+        initKeyBindings();
     }
     
     @Override
@@ -231,11 +229,11 @@ public class Tableau extends JTable
         setData(d);
     }
         
-    private void initTabBehavior() 
+    private void initKeyBindings() 
     {
         getActionMap().put(getInputMap(
-                Tableau.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).get(
-                        KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0)),
+                Tableau.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+                .get(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0)),
                 new AbstractAction() 
         {    
             @Override
@@ -260,9 +258,9 @@ public class Tableau extends JTable
         });
         
         getActionMap().put(getInputMap(
-                Tableau.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).get(
-                        KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 
-                        java.awt.event.InputEvent.SHIFT_DOWN_MASK)),
+                Tableau.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+                .get(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 
+                        InputEvent.SHIFT_DOWN_MASK)),
                 new AbstractAction()
         {
             @Override

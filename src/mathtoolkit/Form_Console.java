@@ -1,103 +1,19 @@
 package mathtoolkit;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-
-import javax.swing.JFrame;
-import javax.swing.JTextArea;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.DefaultCaret;
-
-public class Form_Console extends javax.swing.JInternalFrame
+public class Form_Console extends PopOutFrame
 {
-    private JFrame popoutWindow = null;
-    
-    private class ConsoleOutputStream extends OutputStream 
-    {
-        private final JTextArea console;
-        
-        public ConsoleOutputStream(JTextArea output)
-        {   console = output;    }
-        
-        @Override
-        public void write(int in) throws IOException
-        {    console.append(String.valueOf((char)in));    }
-    }
-    
     public Form_Console()
     {
         initComponents();
-        jTextArea1.getDocument().addDocumentListener(new DocumentListener()
-        {
-            @Override
-            public void insertUpdate(DocumentEvent e)
-            {
-                jTextArea1.setCaretPosition(jTextArea1.getText().length());
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e){}
-
-            @Override
-            public void changedUpdate(DocumentEvent e){}
-        });
-        
-        ((DefaultCaret)jTextArea1.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);        
-        
-        PrintStream st = new PrintStream(new ConsoleOutputStream(jTextArea1));
-        
-        System.setOut(st);
     }
-    
-    public void popout()
-    {
-        if(this.isVisible())
-        {
-            if(popoutWindow == null)
-                popoutWindow = new JFrame();
 
-            popoutWindow.setSize(getSize());
-            popoutWindow.setTitle(title);
-
-            popoutWindow.addWindowListener(new WindowAdapter() 
-            {
-                @Override
-                public void windowClosing(WindowEvent e) 
-                {
-                    popin();
-                }
-            });
-
-            popoutWindow.setContentPane(this.getContentPane());
-            popoutWindow.setJMenuBar(jMenuBar1);
-
-            setVisible(false);
-            popoutWindow.setVisible(true);
-        }
-    }
-    
-    private void popin()
-    {
-        if(popoutWindow.isVisible())
-        {
-            setContentPane(popoutWindow.getContentPane());
-            this.setJMenuBar(jMenuBar1);
-            setVisible(true);
-        }
-    }
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents()
     {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        console1 = new mathtoolkit.Console();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -107,11 +23,9 @@ public class Form_Console extends javax.swing.JInternalFrame
         setResizable(true);
         setTitle("Console");
 
-        jTextArea1.setEditable(false);
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Monospaced", 1, 12)); // NOI18N
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        console1.setColumns(20);
+        console1.setRows(5);
+        jScrollPane2.setViewportView(console1);
 
         jMenu1.setText("Text");
 
@@ -133,11 +47,11 @@ public class Form_Console extends javax.swing.JInternalFrame
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 777, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 594, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
         );
 
         pack();
@@ -145,14 +59,14 @@ public class Form_Console extends javax.swing.JInternalFrame
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem1ActionPerformed
     {//GEN-HEADEREND:event_jMenuItem1ActionPerformed
-        jTextArea1.setText("");
+        console1.setText("");
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private mathtoolkit.Console console1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
 }

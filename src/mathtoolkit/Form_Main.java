@@ -111,8 +111,10 @@ public class Form_Main extends javax.swing.JFrame
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
+        jMenu4 = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Jimkit");
@@ -133,6 +135,23 @@ public class Form_Main extends javax.swing.JFrame
 
         jMenu2.setText("Window");
 
+        jMenu3.setText("Window List");
+        jMenu2.add(jMenu3);
+
+        menuBar.add(jMenu2);
+
+        jMenu4.setText("Debug");
+
+        jMenuItem3.setText("Pop Out All Windows");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem3);
+
         jMenuItem2.setText("Pop Out Console");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener()
         {
@@ -141,12 +160,9 @@ public class Form_Main extends javax.swing.JFrame
                 jMenuItem2ActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem2);
+        jMenu4.add(jMenuItem2);
 
-        jMenu3.setText("Window List");
-        jMenu2.add(jMenu3);
-
-        menuBar.add(jMenu2);
+        menuBar.add(jMenu4);
 
         setJMenuBar(menuBar);
 
@@ -173,6 +189,13 @@ public class Form_Main extends javax.swing.JFrame
     {//GEN-HEADEREND:event_jMenuItem2ActionPerformed
         _CONSOLE.popout();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem3ActionPerformed
+    {//GEN-HEADEREND:event_jMenuItem3ActionPerformed
+        for(JInternalFrame f : desktopPane.getAllFrames())
+            if(PopOutFrame.class.isAssignableFrom(f.getClass()))
+                ((PopOutFrame)f).popout();
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
     
     public static boolean debug()
     {   return _DEBUG;    }
@@ -219,8 +242,10 @@ public class Form_Main extends javax.swing.JFrame
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuBar menuBar;
     // End of variables declaration//GEN-END:variables
 }

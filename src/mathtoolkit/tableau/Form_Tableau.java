@@ -6,7 +6,7 @@ import java.util.Stack;
 import javax.swing.JOptionPane;
 import mathtoolkit.Form_Main;
 
-public class Form_Tableau extends javax.swing.JInternalFrame
+public class Form_Tableau extends mathtoolkit.PopOutFrame
 {
     private static int FRAMECOUNT = 0;
     private Stack<DataSet> _history;
@@ -30,7 +30,7 @@ public class Form_Tableau extends javax.swing.JInternalFrame
                         + "contain numbers, decimals, or front slashes (/).",
                         "Invalid Tableau Entry",
                         JOptionPane.ERROR_MESSAGE);
-            }            
+            }
         }
     }
     
