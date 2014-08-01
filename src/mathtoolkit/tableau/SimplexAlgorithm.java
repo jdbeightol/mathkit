@@ -312,9 +312,6 @@ public class SimplexAlgorithm
                     ArrayList<Point> l = possiblePivots
                             .get(possiblePivots.firstKey());
                     
-                    System.out.println(possiblePivots.toString());
-                    System.out.println(l.toString());
-                                        
                     // Rule #1 (Determination of pivot row).  Whenever there is
                     // more than one possible choice of pivot row in accordance 
                     // with the simplex algorithm, choose the row corresponding
@@ -341,7 +338,6 @@ public class SimplexAlgorithm
             }
         }
         
-        System.out.printf("pos.i:%d, pos.j:%d\n", pos.i, pos.j);
         return pos;
     }
     
@@ -640,14 +636,14 @@ public class SimplexAlgorithm
         outTab = formatTableau(out);
         
         lines = Math.max(inTab.length, outTab.length);
-
+        
         inFormat = String.format("%%%ds", inTab.length);
         outFormat = String.format("%%%ds", outTab.length);
-
+        
         output = new String[lines];
         
         arrFormat = "       %2s       ";
-
+        
         for(int i = 0; i < lines; i++)
         {
             output[i] = "";
@@ -666,13 +662,13 @@ public class SimplexAlgorithm
             else
                 output[i] += String.format(outFormat, "");
         }
-
+        
         System.out.println(title);
         
         for(String o : output)
             if(!o.equals(""))
                 System.out.println(o);
-
+        
         System.out.println();
     }
 }
