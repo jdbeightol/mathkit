@@ -20,6 +20,7 @@ public class Tableau extends JTable
         private boolean             isTableEditable;
         private final String[][]    mxVar = new String[2][],
                                     mnVar = new String[2][];
+        private String[]            vrOrd = null;
         
         public TableauModel()
         {
@@ -29,7 +30,7 @@ public class Tableau extends JTable
         
         public TableauModel(Object[][] data)
         {
-            this(data, null);   
+            this(data, null);
         }
 
         public TableauModel(Object[][] data, Object[] columnNames)
@@ -43,6 +44,8 @@ public class Tableau extends JTable
                 mxVar[1] = new String[(data.length > 0)?data[0].length:0];
                 mnVar[0] = new String[data.length];
                 mnVar[1] = new String[(data.length > 0)?data[0].length:0];
+
+                vrOrd = new String[(data.length > 0)?data[0].length:0 + data.length];
             }
         }
         
@@ -55,6 +58,8 @@ public class Tableau extends JTable
             mxVar[1] = new String[rowCount];
             mnVar[0] = new String[columnCount];
             mnVar[1] = new String[rowCount];
+            
+            vrOrd = new String[rowCount + columnCount];
         }
         
         public String[][] getMaxVariables()
@@ -62,7 +67,10 @@ public class Tableau extends JTable
 
         public String[][] getMinVariables()
         {   return mnVar;    }
-
+        
+        public String[] getVariableOrder()
+        {   return vrOrd;    }
+        
         public void setTableEditable(boolean editable)
         {    isTableEditable = editable;    }
         
@@ -118,7 +126,7 @@ public class Tableau extends JTable
     
     public DataSet getData() throws NumberFormatException
     {
-        DataSet tableauData = new DataSet();
+        DataSet td = new DataSet();
         TableauModel t = (TableauModel)getModel();
         
         Rational[][] tData = new Rational[t.getRowCount()][t.getColumnCount()];
@@ -131,28 +139,30 @@ public class Tableau extends JTable
                                     ?"0":(String)t.getValueAt(i, j)
                     );
         
-        tableauData.data = tData;
-        tableauData.maxVariables = t.mxVar[0];
-        tableauData.maxSlackVars = t.mxVar[1];
-        tableauData.minVariables = t.mnVar[0];
-        tableauData.minSlackVars = t.mnVar[1];
+        td.setData(tData);
         
-        return tableauData;
+        td.setMax(t.mxVar[0], t.mxVar[1]);
+        td.setMin(t.mnVar[0], t.mnVar[1]);
+        td.setVariableOrder(t.vrOrd);
+        
+        return td;
     }
     
     public void setData(DataSet tableauData)
     {
-        int columns = tableauData.data[0].length;
+        int columns = tableauData.getData()[0].length;
         TableauModel t;
         
         t = new Tableau.TableauModel(new Object[][] {}, new String[columns]);
         
-        t.mxVar[0] = tableauData.maxVariables;
-        t.mxVar[1] = tableauData.maxSlackVars;
-        t.mnVar[0] = tableauData.minVariables;
-        t.mnVar[1] = tableauData.minSlackVars;
+        t.vrOrd = tableauData.getVariableOrder();
         
-        for(Rational[] r : tableauData.data)
+        t.mxVar[0] = tableauData.getMaxVarArray();
+        t.mxVar[1] = tableauData.getMaxSlackArray();
+        t.mnVar[0] = tableauData.getMinVarArray();
+        t.mnVar[1] = tableauData.getMinSlackArray();
+        
+        for(Rational[] r : tableauData.getData())
         {
             String s[] = new String[r.length];
             
@@ -176,54 +186,56 @@ public class Tableau extends JTable
     
     public void create(int variables, int constraints, String[] varX, String[] varY)
     {
-        DataSet d = new DataSet();
-        
-        d.data = new Rational[constraints + 1][variables + 1];
+        DataSet d = new DataSet(new Rational[constraints + 1][variables + 1]);        
+        String[] maxVariables, maxSlackVars, minVariables, minSlackVars;
         
         if(varX != null && !varX[0].equals(""))
         {
-            d.maxVariables = new String[variables + 1];
-            d.maxSlackVars = new String[constraints + 1];
+            maxVariables = new String[variables + 1];
+            maxSlackVars = new String[constraints + 1];
             
-            System.arraycopy(varX, 0, d.maxVariables, 0, varX.length);
+            System.arraycopy(varX, 0, maxVariables, 0, varX.length);
             
             if(varX.length < variables)
             {
-                d.maxVariables[varX.length - 1] += "1";
+                maxVariables[varX.length - 1] += "1";
                 
                 for(int i = varX.length; i < variables; i++)
-                    d.maxVariables[i] = varX[varX.length - 1] + (2 + i - varX.length);
+                    maxVariables[i] = varX[varX.length - 1] + (2 + i - varX.length);
             }
             
-            d.maxVariables[variables] = "-1";
+            maxVariables[variables] = "-1";
             
             for(int i = 0; i < constraints; i++)    
-                d.maxSlackVars[i] = "t" + (1 + i);
+                maxSlackVars[i] = "t" + (1 + i);
             
-            d.maxSlackVars[constraints] = "f";
+            maxSlackVars[constraints] = "f";
+            d.setMax(maxVariables, maxSlackVars);
         }
         
         if(varY != null && !varY[0].equals(""))
         {
-            d.minVariables = new String[constraints + 1];
-            d.minSlackVars = new String[variables + 1];
+            minVariables = new String[constraints + 1];
+            minSlackVars = new String[variables + 1];
             
-            System.arraycopy(varY, 0, d.minVariables, 0, varY.length);
+            System.arraycopy(varY, 0, minVariables, 0, varY.length);
             
             if(varY.length < constraints)
             {
-                d.minVariables[varY.length - 1] += "1";
+                minVariables[varY.length - 1] += "1";
                 
                 for(int i = varY.length; i < constraints; i++)
-                    d.minVariables[i] = varY[varY.length - 1] + (2 + i - varY.length);
+                    minVariables[i] = varY[varY.length - 1] + (2 + i - varY.length);
             }
             
-            d.minVariables[constraints] = "-1";
+            minVariables[constraints] = "-1";
             
             for(int i = 0; i < variables; i++)
-                d.minSlackVars[i] = "s" + (1 + i);
+                minSlackVars[i] = "s" + (1 + i);
             
-            d.minSlackVars[variables] = "g";
+            minSlackVars[variables] = "g";
+    
+            d.setMin(minVariables, minSlackVars);
         }
         
         setData(d);

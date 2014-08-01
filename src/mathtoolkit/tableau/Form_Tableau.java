@@ -42,6 +42,12 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
         setLocation(45 * (FRAMECOUNT % 10), 45 * (FRAMECOUNT % 10));
     }
     
+    public Form_Tableau(DataSet ds)
+    {
+        this();
+        tableau1.setData(ds);
+    }
+    
     public Form_Tableau(int variables, int constraints, String[] varX, String[] varY)
     {
         this();
@@ -126,16 +132,16 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
                 DataSet tData = tableau1.getData();
                 Point piv = new Point(-1, -1);
                 
-                if(!SimplexAlgorithm.isBSO(tData.data))
-                    if(SimplexAlgorithm.isMBF(tData.data))
+                if(!SimplexAlgorithm.isBSO(tData.getData()))
+                    if(SimplexAlgorithm.isMBF(tData.getData()))
                     {
-                        if(!SimplexAlgorithm.isUnbounded(tData.data))
-                            piv = SimplexAlgorithm.findIdealMBFPivot(tData.data);
+                        if(!SimplexAlgorithm.isUnbounded(tData.getData()))
+                            piv = SimplexAlgorithm.findIdealMBFPivot(tData);
                     }
                     
                     else
-                        if(!SimplexAlgorithm.isInfeasible(tData.data))
-                            piv = SimplexAlgorithm.findIdealMBPivot(tData.data);
+                        if(!SimplexAlgorithm.isInfeasible(tData.getData()))
+                            piv = SimplexAlgorithm.findIdealMBPivot(tData);
                 
                 if(piv.i >= 0 && piv.j >= 0)
                     System.out.printf("The best probable pivot is the %s at "

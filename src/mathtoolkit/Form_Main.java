@@ -4,15 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
-
 import java.beans.PropertyVetoException;
-
 import java.util.Arrays;
 import java.util.TreeMap;
-
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
-
+import mathtoolkit.base.Rational;
+import mathtoolkit.tableau.DataSet;
 import mathtoolkit.tableau.Form_NewTableau;
 import mathtoolkit.tableau.Form_Tableau;
 
@@ -30,15 +28,11 @@ public class Form_Main extends javax.swing.JFrame
         {
             @Override
             public void componentAdded(ContainerEvent e)
-            {
-                updateWindowList();
-            }
+            {    updateWindowList();    }
             
             @Override
             public void componentRemoved(ContainerEvent e)
-            {
-                updateWindowList();
-            }
+            {    updateWindowList();    }
         });
         
         setLocationRelativeTo(null);
@@ -47,17 +41,7 @@ public class Form_Main extends javax.swing.JFrame
         desktopPane.add(_CONSOLE);
         _CONSOLE.setVisible(true);
         
-        if(_DEBUG)
-        {
-            String[] X = {"x"},
-                     Y = {"y"};
-            
-            Form_Tableau test = new Form_Tableau(2, 2, X, Y);
-            desktopPane.add(test);
-            test.setVisible(true);
-        }
-        
-        else
+        if(!_DEBUG)
             jMenu4.setVisible(false);
         
         System.out.println("To begin, choose an item from the menu above.");
@@ -67,7 +51,7 @@ public class Form_Main extends javax.swing.JFrame
     {
         jMenu3.removeAll();
         
-        //For sorting purposes.
+        // For sorting purposes.
         TreeMap<String, JInternalFrame> tm = new TreeMap<>();
         
         for(final JInternalFrame f : desktopPane.getAllFrames())
@@ -125,6 +109,7 @@ public class Form_Main extends javax.swing.JFrame
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
+        jMenuItem4 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Jimkit");
@@ -172,6 +157,17 @@ public class Form_Main extends javax.swing.JFrame
         menuBar.add(jMenu2);
 
         jMenu4.setText("Debug");
+
+        jMenuItem4.setText("Open Cycling Tableau");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem4);
+
         menuBar.add(jMenu4);
 
         setJMenuBar(menuBar);
@@ -208,6 +204,36 @@ public class Form_Main extends javax.swing.JFrame
         
         setExtendedState(getExtendedState()|javax.swing.JFrame.ICONIFIED);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem4ActionPerformed
+    {//GEN-HEADEREND:event_jMenuItem4ActionPerformed
+        DataSet ds = new DataSet();
+        Form_Tableau f;
+        Rational[][] r;
+        String[][] cycler =
+        {
+            {"1/4", "-8", "-1", "9", "0"},
+            {"1/2", "-12", "-1/2", "3", "0"},
+            {"0", "0", "1", "0", "1"},
+            {"3/4", "-20", "1/2", "-6", "0"}
+        };
+        
+        r = new Rational[cycler.length][cycler[0].length];
+        
+        for(int i = 0; i < cycler.length; i++)
+            for(int j = 0; j < cycler[i].length; j++)
+                r[i][j] = new Rational(cycler[i][j]);
+        
+        String[] vars = {"x1", "x2", "x3", "x4", "-1"};
+        String[] slks = {"t1", "t2", "t3", "f"};
+        
+        ds.setData(r);
+        ds.setMax(vars, slks);
+        
+        f = new Form_Tableau(ds);
+        desktopPane.add(f);
+        f.setVisible(true);
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
     
     public static boolean debug()
     {   return _DEBUG;    }
@@ -258,6 +284,7 @@ public class Form_Main extends javax.swing.JFrame
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JMenuBar menuBar;
     // End of variables declaration//GEN-END:variables
