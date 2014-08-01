@@ -3,17 +3,48 @@ package mathtoolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import java.beans.PropertyVetoException;
+
+import java.util.Arrays;
+
 import javax.swing.JFrame;
 
 public class PopOutFrame extends javax.swing.JInternalFrame
 {
     private JFrame popoutWindow = null;
+    private boolean popped = false;
 
     public PopOutFrame()
     {    super();    }
     
     public PopOutFrame(String t, boolean a, boolean b, boolean c, boolean d)
     {    super(t, a, b, c, d);    }
+    
+    public boolean isPopped()
+    {
+        return popped;
+    }
+    
+    public void bringForward()
+    {
+        if(popped)
+            popoutWindow.setVisible(true);
+        
+        else
+            try
+            {
+                if(isIcon())
+                    setIcon(false);
+
+                moveToFront();
+                setSelected(true);
+            }
+            
+            catch(PropertyVetoException ex)
+            {
+                System.err.println(Arrays.toString(ex.getStackTrace()));
+            }
+    }
     
     public void popout()
     {
@@ -39,6 +70,7 @@ public class PopOutFrame extends javax.swing.JInternalFrame
 
             setVisible(false);
             popoutWindow.setVisible(true);
+            popped = true;
         }
     }
     
@@ -47,8 +79,10 @@ public class PopOutFrame extends javax.swing.JInternalFrame
         if(popoutWindow.isVisible())
         {
             setContentPane(popoutWindow.getContentPane());
-            this.setJMenuBar(getJMenuBar());
+            setJMenuBar(getJMenuBar());
+            popoutWindow.setVisible(false);
             setVisible(true);
+            popped = false;
         }
-    }    
+    }
 }

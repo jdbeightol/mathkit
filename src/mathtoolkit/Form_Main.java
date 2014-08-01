@@ -57,6 +57,9 @@ public class Form_Main extends javax.swing.JFrame
             test.setVisible(true);
         }
         
+        else
+            jMenu3.setVisible(false);
+        
         System.out.println("To begin, choose an item from the menu above.");
     }
     
@@ -64,6 +67,7 @@ public class Form_Main extends javax.swing.JFrame
     {
         jMenu3.removeAll();
         
+        //For sorting purposes.
         TreeMap<String, JInternalFrame> tm = new TreeMap<>();
         
         for(final JInternalFrame f : desktopPane.getAllFrames())
@@ -81,19 +85,24 @@ public class Form_Main extends javax.swing.JFrame
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
-                    try
-                    {
-                        if(f.isIcon())
-                            f.setIcon(false);
-                        
-                        f.moveToFront();
-                        f.setSelected(true);
-                    }
+                    if(PopOutFrame.class.isAssignableFrom(f.getClass()))
+                            ((PopOutFrame)f).bringForward();
                     
-                    catch(PropertyVetoException ex)
-                    {
-                        System.err.println(Arrays.toString(ex.getStackTrace()));
-                    }
+                    else
+                        
+                        try
+                        {
+                            if(f.isIcon())
+                                f.setIcon(false);
+
+                            f.moveToFront();
+                            f.setSelected(true);
+                        }
+                        
+                        catch(PropertyVetoException ex)
+                        {
+                            System.err.println(Arrays.toString(ex.getStackTrace()));
+                        }
                 }
             });
             
@@ -111,10 +120,11 @@ public class Form_Main extends javax.swing.JFrame
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
-        jMenu4 = new javax.swing.JMenu();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jMenu4 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Jimkit");
@@ -135,6 +145,10 @@ public class Form_Main extends javax.swing.JFrame
 
         jMenu2.setText("Window");
 
+        jMenu3.setText("Window List");
+        jMenu2.add(jMenu3);
+        jMenu2.add(jSeparator1);
+
         jMenuItem2.setText("Pop Out Console");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener()
         {
@@ -145,13 +159,6 @@ public class Form_Main extends javax.swing.JFrame
         });
         jMenu2.add(jMenuItem2);
 
-        jMenu3.setText("Window List");
-        jMenu2.add(jMenu3);
-
-        menuBar.add(jMenu2);
-
-        jMenu4.setText("Debug");
-
         jMenuItem3.setText("Pop Out All Windows");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener()
         {
@@ -160,8 +167,11 @@ public class Form_Main extends javax.swing.JFrame
                 jMenuItem3ActionPerformed(evt);
             }
         });
-        jMenu4.add(jMenuItem3);
+        jMenu2.add(jMenuItem3);
 
+        menuBar.add(jMenu2);
+
+        jMenu4.setText("Debug");
         menuBar.add(jMenu4);
 
         setJMenuBar(menuBar);
@@ -248,6 +258,7 @@ public class Form_Main extends javax.swing.JFrame
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JMenuBar menuBar;
     // End of variables declaration//GEN-END:variables
 }
