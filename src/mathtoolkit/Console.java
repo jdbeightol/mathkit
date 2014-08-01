@@ -15,7 +15,6 @@ import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultCaret;
-import mathtoolkit.tableau.Tableau;
 
 public class Console extends JTextArea
 {
