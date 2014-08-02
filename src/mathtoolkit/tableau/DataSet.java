@@ -1,8 +1,7 @@
 package mathtoolkit.tableau;
 
-import mathtoolkit.base.Rational;
-
 import java.util.Arrays;
+import mathtoolkit.base.Rational;
 
 public class DataSet
 {
@@ -28,37 +27,59 @@ public class DataSet
     {
         this();
         
-        data = new Rational[in.length][in[0].length];
+        if(in != null)
+        {
+            data = new Rational[in.length][in[0].length];
 
-        for(int i = 0; i < in.length; i++)
-            System.arraycopy(in[i], 0, data[i], 0, in[i].length);
+            for(int i = 0; i < in.length; i++)
+                System.arraycopy(in[i], 0, data[i], 0, in[i].length);
+        }
     }
     
     public DataSet(DataSet ds)
     {
-        data = new Rational[ds.data.length][ds.data[0].length];
+        this();
         
-        variableOrder = new String[ds.variableOrder.length];
-        
-        maxVariables = new String[ds.maxVariables.length];
-        maxSlackVars = new String[ds.maxSlackVars.length];
+        if(ds != null)
+        {
+            if(!ds.isDataNull())
+            {
+                data = new Rational[ds.data.length][ds.data[0].length];
 
-        minVariables = new String[ds.minVariables.length];
-        minSlackVars = new String[ds.minSlackVars.length];
-        
-        for(int i = 0; i < ds.data.length; i++)
-            System.arraycopy(ds.data[i], 0, data[i], 0, ds.data[i].length);
-        
-        System.arraycopy(ds.variableOrder, 0, variableOrder, 0, ds.variableOrder.length);
-        System.arraycopy(ds.maxVariables, 0, maxVariables, 0, ds.maxVariables.length);
-        System.arraycopy(ds.maxSlackVars, 0, maxSlackVars, 0, ds.maxSlackVars.length);
-        System.arraycopy(ds.minVariables, 0, minVariables, 0, ds.minVariables.length);
-        System.arraycopy(ds.minSlackVars, 0, minSlackVars, 0, ds.minSlackVars.length);
+                for(int i = 0; i < ds.data.length; i++)
+                    System.arraycopy(ds.data[i], 0, data[i], 0, ds.data[i].length);
+            }
+
+            if(!ds.isOrderNull())
+            {
+                variableOrder = new String[ds.variableOrder.length];
+
+                System.arraycopy(ds.variableOrder, 0, variableOrder, 0, ds.variableOrder.length);
+            }
+
+            if(!ds.isMaxNull())
+            {
+                maxVariables = new String[ds.maxVariables.length];
+                maxSlackVars = new String[ds.maxSlackVars.length];
+
+                System.arraycopy(ds.maxVariables, 0, maxVariables, 0, ds.maxVariables.length);
+                System.arraycopy(ds.maxSlackVars, 0, maxSlackVars, 0, ds.maxSlackVars.length);
+            }
+
+            if(!ds.isMinNull())
+            {
+                minVariables = new String[ds.minVariables.length];
+                minSlackVars = new String[ds.minSlackVars.length];
+
+                System.arraycopy(ds.minVariables, 0, minVariables, 0, ds.minVariables.length);
+                System.arraycopy(ds.minSlackVars, 0, minSlackVars, 0, ds.minSlackVars.length);
+            }
+        }
     }
     
     public void generateVariableOrder()
     {
-        if(!isMaxNull() && isOrderNull())
+        if(!isMaxNull())
         {
             variableOrder = new String[maxVariables.length + maxSlackVars.length - 2];
             
@@ -69,17 +90,23 @@ public class DataSet
     
     public void setData(Rational[][] in)
     {
-        data = new Rational[in.length][in[0].length];
-        
-        for(int i = 0; i < in.length; i++)
-            System.arraycopy(in[i], 0, data[i], 0, in[i].length);
+        if(in != null)
+        {
+            data = new Rational[in.length][in[0].length];
+
+            for(int i = 0; i < in.length; i++)
+                System.arraycopy(in[i], 0, data[i], 0, in[i].length);
+        }
     }
     
     public void setVariableOrder(String[] s)
     {
-        variableOrder = new String[s.length];
-        
-        System.arraycopy(s, 0, variableOrder, 0, s.length);
+        if(s != null)
+        {
+            variableOrder = new String[s.length];
+
+            System.arraycopy(s, 0, variableOrder, 0, s.length);
+        }
     }
     
     public void setMax(String[] variables, String[] slacks)
@@ -99,7 +126,8 @@ public class DataSet
             maxSlackVars = null;
         }
         
-        generateVariableOrder();
+        if(isOrderNull())
+            generateVariableOrder();
     }
     
     public void setMin(String[] variables, String[] slacks)

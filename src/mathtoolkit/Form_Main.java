@@ -109,11 +109,12 @@ public class Form_Main extends javax.swing.JFrame
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
+        jMenu4 = new javax.swing.JMenu();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
-        jMenu4 = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Jimkit");
@@ -136,7 +137,31 @@ public class Form_Main extends javax.swing.JFrame
 
         jMenu3.setText("Window List");
         jMenu2.add(jMenu3);
-        jMenu2.add(jSeparator1);
+
+        menuBar.add(jMenu2);
+
+        jMenu4.setText("Debug");
+
+        jMenuItem5.setText("2X2 Max Test Tableau");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem5);
+
+        jMenuItem4.setText("4X3 Max Cycling Tableau");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem4);
+        jMenu4.add(jSeparator1);
 
         jMenuItem2.setText("Pop Out Console");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener()
@@ -146,7 +171,7 @@ public class Form_Main extends javax.swing.JFrame
                 jMenuItem2ActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem2);
+        jMenu4.add(jMenuItem2);
 
         jMenuItem3.setText("Pop Out All Windows");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener()
@@ -156,21 +181,7 @@ public class Form_Main extends javax.swing.JFrame
                 jMenuItem3ActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem3);
-
-        menuBar.add(jMenu2);
-
-        jMenu4.setText("Debug");
-
-        jMenuItem4.setText("Open Cycling Tableau");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                jMenuItem4ActionPerformed(evt);
-            }
-        });
-        jMenu4.add(jMenuItem4);
+        jMenu4.add(jMenuItem3);
 
         menuBar.add(jMenu4);
 
@@ -238,6 +249,35 @@ public class Form_Main extends javax.swing.JFrame
         desktopPane.add(f);
         f.setVisible(true);
     }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem5ActionPerformed
+    {//GEN-HEADEREND:event_jMenuItem5ActionPerformed
+        DataSet ds = new DataSet();
+        Form_Tableau f;
+        Rational[][] r;
+        String[][] tableau =
+        {
+            {"1", "2", "3"},
+            {"4", "5", "6"},
+            {"7", "8", "9"}
+        };
+        
+        r = new Rational[tableau.length][tableau[0].length];
+        
+        for(int i = 0; i < tableau.length; i++)
+            for(int j = 0; j < tableau[i].length; j++)
+                r[i][j] = new Rational(tableau[i][j]);
+        
+        String[] vars = {"x1", "x2", "-1"};
+        String[] slks = {"t1", "t2", "f"};
+        
+        ds.setData(r);
+        ds.setMax(vars, slks);
+        
+        f = new Form_Tableau(ds);
+        desktopPane.add(f);
+        f.setVisible(true);        
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
     
     public static boolean debug()
     {   return _DEBUG;    }
@@ -289,6 +329,7 @@ public class Form_Main extends javax.swing.JFrame
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JMenuBar menuBar;
     // End of variables declaration//GEN-END:variables
