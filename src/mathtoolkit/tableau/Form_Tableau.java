@@ -77,7 +77,7 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
             System.out.println("There is no history to undo tableau to which to revert.");
         
         if(_history.isEmpty())
-            jMenuItem8.setEnabled(false);
+            undo.setEnabled(false);
     }
     
     private void addHistory(DataSet ds)
@@ -87,10 +87,10 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
         if(_original == null)
             _original = ds;
         
-        jMenuItem7.setEnabled(true);
+        revert.setEnabled(true);
         
         if(!_history.isEmpty())
-            jMenuItem8.setEnabled(true);
+            undo.setEnabled(true);
     }
     
     private void checkTableauState()
@@ -206,7 +206,7 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
     {
         if(e.isPopupTrigger())
         {
-            jMenuItem1.setText("Pivot on " + tableau1.getValueAt(
+            pivot.setText("Pivot on " + tableau1.getValueAt(
                     tableau1.rowAtPoint(e.getPoint()), 
                     tableau1.columnAtPoint(e.getPoint())));
         
@@ -220,111 +220,120 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
     {
 
         jPopupMenu1 = new javax.swing.JPopupMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
-        jMenuItem6 = new javax.swing.JMenuItem();
-        jMenuItem9 = new javax.swing.JMenuItem();
+        pivot = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        findPivot = new javax.swing.JMenuItem();
+        checkState = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        jMenu1 = new javax.swing.JMenu();
+        solveMax = new javax.swing.JMenuItem();
+        solveMin = new javax.swing.JMenuItem();
+        negTranspose = new javax.swing.JMenuItem();
+        convertMBF = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem8 = new javax.swing.JMenuItem();
-        jMenuItem7 = new javax.swing.JMenuItem();
+        undo = new javax.swing.JMenuItem();
+        revert = new javax.swing.JMenuItem();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableau1 = new mathtoolkit.tableau.Tableau();
 
-        jMenuItem1.setText("Pivot Here");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener()
+        pivot.setText("Pivot Here");
+        pivot.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                jMenuItem1ActionPerformed(evt);
+                pivotActionPerformed(evt);
             }
         });
-        jPopupMenu1.add(jMenuItem1);
+        jPopupMenu1.add(pivot);
+        jPopupMenu1.add(jSeparator2);
 
-        jMenuItem3.setText("Find Ideal Pivot");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener()
+        findPivot.setText("Find Ideal Pivot");
+        findPivot.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                jMenuItem3ActionPerformed(evt);
+                findPivotActionPerformed(evt);
             }
         });
-        jPopupMenu1.add(jMenuItem3);
+        jPopupMenu1.add(findPivot);
 
-        jMenuItem2.setText("Negative Transpose");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener()
+        checkState.setText("Check Current State");
+        checkState.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                jMenuItem2ActionPerformed(evt);
+                checkStateActionPerformed(evt);
             }
         });
-        jPopupMenu1.add(jMenuItem2);
+        jPopupMenu1.add(checkState);
+        jPopupMenu1.add(jSeparator3);
 
-        jMenuItem4.setText("Convert to MBF");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                jMenuItem4ActionPerformed(evt);
-            }
-        });
-        jPopupMenu1.add(jMenuItem4);
+        jMenu1.setText("Solve...");
 
-        jMenuItem5.setText("Check Current State");
-        jMenuItem5.addActionListener(new java.awt.event.ActionListener()
+        solveMax.setText("as Maximum Tableau");
+        solveMax.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                jMenuItem5ActionPerformed(evt);
+                solveMaxActionPerformed(evt);
             }
         });
-        jPopupMenu1.add(jMenuItem5);
+        jMenu1.add(solveMax);
 
-        jMenuItem6.setText("Solve Maximum");
-        jMenuItem6.addActionListener(new java.awt.event.ActionListener()
+        solveMin.setText("as Minimum Tableau");
+        solveMin.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                jMenuItem6ActionPerformed(evt);
+                solveMinActionPerformed(evt);
             }
         });
-        jPopupMenu1.add(jMenuItem6);
+        jMenu1.add(solveMin);
 
-        jMenuItem9.setText("Solve Minimum");
-        jMenuItem9.addActionListener(new java.awt.event.ActionListener()
+        jPopupMenu1.add(jMenu1);
+
+        negTranspose.setText("Negative Transpose");
+        negTranspose.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                jMenuItem9ActionPerformed(evt);
+                negTransposeActionPerformed(evt);
             }
         });
-        jPopupMenu1.add(jMenuItem9);
+        jPopupMenu1.add(negTranspose);
+
+        convertMBF.setText("Convert to MBF");
+        convertMBF.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                convertMBFActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(convertMBF);
         jPopupMenu1.add(jSeparator1);
 
-        jMenuItem8.setText("Undo");
-        jMenuItem8.setEnabled(false);
-        jMenuItem8.addActionListener(new java.awt.event.ActionListener()
+        undo.setText("Undo");
+        undo.setEnabled(false);
+        undo.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                jMenuItem8ActionPerformed(evt);
+                undoActionPerformed(evt);
             }
         });
-        jPopupMenu1.add(jMenuItem8);
+        jPopupMenu1.add(undo);
 
-        jMenuItem7.setText("Revert to Original");
-        jMenuItem7.setEnabled(false);
-        jMenuItem7.addActionListener(new java.awt.event.ActionListener()
+        revert.setText("Revert to Original");
+        revert.setEnabled(false);
+        revert.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                jMenuItem7ActionPerformed(evt);
+                revertActionPerformed(evt);
             }
         });
-        jPopupMenu1.add(jMenuItem7);
+        jPopupMenu1.add(revert);
 
         setClosable(true);
         setIconifiable(true);
@@ -350,7 +359,7 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
                 .addContainerGap())
@@ -366,10 +375,10 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
         pack();
     }// </editor-fold>//GEN-END:initComponents
                 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem1ActionPerformed
-    {//GEN-HEADEREND:event_jMenuItem1ActionPerformed
+    private void pivotActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_pivotActionPerformed
+    {//GEN-HEADEREND:event_pivotActionPerformed
         pivot();
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_pivotActionPerformed
 
     private void tableau1MousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_tableau1MousePressed
     {//GEN-HEADEREND:event_tableau1MousePressed
@@ -380,64 +389,67 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
         showPivotMenu(evt);
     }//GEN-LAST:event_tableau1MousePressed
 
-    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem6ActionPerformed
-    {//GEN-HEADEREND:event_jMenuItem6ActionPerformed
+    private void solveMaxActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_solveMaxActionPerformed
+    {//GEN-HEADEREND:event_solveMaxActionPerformed
         solve(false);
-    }//GEN-LAST:event_jMenuItem6ActionPerformed
+    }//GEN-LAST:event_solveMaxActionPerformed
 
-    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem5ActionPerformed
-    {//GEN-HEADEREND:event_jMenuItem5ActionPerformed
+    private void checkStateActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_checkStateActionPerformed
+    {//GEN-HEADEREND:event_checkStateActionPerformed
         checkTableauState();
-    }//GEN-LAST:event_jMenuItem5ActionPerformed
+    }//GEN-LAST:event_checkStateActionPerformed
 
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem4ActionPerformed
-    {//GEN-HEADEREND:event_jMenuItem4ActionPerformed
+    private void convertMBFActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_convertMBFActionPerformed
+    {//GEN-HEADEREND:event_convertMBFActionPerformed
         convertToMBF();
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
+    }//GEN-LAST:event_convertMBFActionPerformed
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem3ActionPerformed
-    {//GEN-HEADEREND:event_jMenuItem3ActionPerformed
+    private void findPivotActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_findPivotActionPerformed
+    {//GEN-HEADEREND:event_findPivotActionPerformed
         findIdealPivot();
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+    }//GEN-LAST:event_findPivotActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem2ActionPerformed
-    {//GEN-HEADEREND:event_jMenuItem2ActionPerformed
+    private void negTransposeActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_negTransposeActionPerformed
+    {//GEN-HEADEREND:event_negTransposeActionPerformed
         negativeTranspose();
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_negTransposeActionPerformed
 
-    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem7ActionPerformed
-    {//GEN-HEADEREND:event_jMenuItem7ActionPerformed
+    private void revertActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_revertActionPerformed
+    {//GEN-HEADEREND:event_revertActionPerformed
         revertToOriginal();
-    }//GEN-LAST:event_jMenuItem7ActionPerformed
+    }//GEN-LAST:event_revertActionPerformed
 
     private void tableau1MouseReleased(java.awt.event.MouseEvent evt)//GEN-FIRST:event_tableau1MouseReleased
     {//GEN-HEADEREND:event_tableau1MouseReleased
         showPivotMenu(evt);        
     }//GEN-LAST:event_tableau1MouseReleased
 
-    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem8ActionPerformed
-    {//GEN-HEADEREND:event_jMenuItem8ActionPerformed
+    private void undoActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_undoActionPerformed
+    {//GEN-HEADEREND:event_undoActionPerformed
         undo();
-    }//GEN-LAST:event_jMenuItem8ActionPerformed
+    }//GEN-LAST:event_undoActionPerformed
 
-    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem9ActionPerformed
-    {//GEN-HEADEREND:event_jMenuItem9ActionPerformed
+    private void solveMinActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_solveMinActionPerformed
+    {//GEN-HEADEREND:event_solveMinActionPerformed
         solve(true);
-    }//GEN-LAST:event_jMenuItem9ActionPerformed
+    }//GEN-LAST:event_solveMinActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JMenuItem jMenuItem7;
-    private javax.swing.JMenuItem jMenuItem8;
-    private javax.swing.JMenuItem jMenuItem9;
+    private javax.swing.JMenuItem checkState;
+    private javax.swing.JMenuItem convertMBF;
+    private javax.swing.JMenuItem findPivot;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JMenuItem negTranspose;
+    private javax.swing.JMenuItem pivot;
+    private javax.swing.JMenuItem revert;
+    private javax.swing.JMenuItem solveMax;
+    private javax.swing.JMenuItem solveMin;
     private mathtoolkit.tableau.Tableau tableau1;
+    private javax.swing.JMenuItem undo;
     // End of variables declaration//GEN-END:variables
 }

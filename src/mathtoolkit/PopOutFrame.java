@@ -52,10 +52,11 @@ public class PopOutFrame extends javax.swing.JInternalFrame
         {
             if(popoutWindow == null)
                 popoutWindow = new JFrame();
-
+            
+            popoutWindow.setLocation(getLocation());
             popoutWindow.setSize(getSize());
             popoutWindow.setTitle(title);
-
+            
             popoutWindow.addWindowListener(new WindowAdapter() 
             {
                 @Override
@@ -64,10 +65,10 @@ public class PopOutFrame extends javax.swing.JInternalFrame
                     popin();
                 }
             });
-
+            
             popoutWindow.setContentPane(this.getContentPane());
             popoutWindow.setJMenuBar(getJMenuBar());
-
+            
             setVisible(false);
             popoutWindow.setVisible(true);
             popped = true;

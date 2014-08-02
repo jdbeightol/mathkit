@@ -1,5 +1,7 @@
 package mathtoolkit;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ContainerEvent;
@@ -21,6 +23,7 @@ public class Form_Main extends javax.swing.JFrame
     
     public Form_Main()
     {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setExtendedState(getExtendedState()|javax.swing.JFrame.MAXIMIZED_BOTH);
         initComponents();
         
@@ -40,6 +43,7 @@ public class Form_Main extends javax.swing.JFrame
         _CONSOLE = new Form_Console();
         desktopPane.add(_CONSOLE);
         _CONSOLE.setVisible(true);
+        _CONSOLE.setSize(3 * screenSize.width / 5, 3 * screenSize.height / 5);
         
         if(!_DEBUG)
             jMenu4.setVisible(false);
