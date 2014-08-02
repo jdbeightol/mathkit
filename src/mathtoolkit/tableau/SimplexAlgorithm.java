@@ -1,11 +1,8 @@
 package mathtoolkit.tableau;
 
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.TreeMap;
+
 import mathtoolkit.base.Point;
 import mathtoolkit.base.Rational;
 
@@ -91,7 +88,6 @@ public class SimplexAlgorithm
         else
             System.out.printf("The basic solution of the current tableau is "
                     + "optimal.\n%s\n\n", formatMaxSolution(in));
-
     }
     
     public static DataSet dantzigSimplexAlgorithm(DataSet in, boolean min)
@@ -102,7 +98,7 @@ public class SimplexAlgorithm
         
         // If the problem is exclusively a min problem, get the negative 
         // transposition of it.
-        if(min || (in.isMaxNull() && !in.isMinNull()))
+        if(min)
             out = negativeTranspose(out);
         
         // Convert the tableau to maximum basic feasible form, if it isn't 
@@ -131,32 +127,34 @@ public class SimplexAlgorithm
     
     public static DataSet negativeTranspose(DataSet in)
     {
-        DataSet out = in;
+        DataSet out = new DataSet(in.getData());
         
         if(!in.isMinNull())
         {
-            out = new DataSet(in.getData());
-            
-            out.setMax(in.getMinVarArray(), in.getMinSlackArray());
-            out.setMin(null, null);
-            
             String[] mxSlack = out.getMaxSlackArray();
             
+            out.setMax(in.getMinVarArray(), in.getMinSlackArray());
+            out.setMin(null, null);                        
             mxSlack[mxSlack.length - 1] = "-" + mxSlack[mxSlack.length - 1];
-            
-            Rational[][] inData = in.getData();
-            
-            for(int i = 0; i < inData.length; i++)
-                for(int j = 0; j < inData[i].length; j++)
-                    out.getData()[j][i] = inData[i][j].multiply(-1);
-            
-            printTableauTransform("Negative Transposition", in, out);
         }
         
         else
-            System.out.println("Unable to transpose the tableau as there are no"
-                    + " minimum variables..");
+        {
+            out.setMax(null, null);
+            out.setMin(null, null);
+            System.out.println("No minimum variables were present, so all "
+                    + "variables have been removed.");
+        }
         
+        out.generateVariableOrder();
+        Rational[][] inData = in.getData();
+
+        for(int i = 0; i < inData.length; i++)
+            for(int j = 0; j < inData[i].length; j++)
+                out.getData()[j][i] = inData[i][j].multiply(-1);
+
+        printTableauTransform("Negative Transposition", in, out);
+
         return out;
     }
     
@@ -274,6 +272,7 @@ public class SimplexAlgorithm
                 // top (or front) of the list.
                 if(!in.isMaxNull())
                     if(possibleCValues.keySet().size() > 0)
+                    {
                         RULE2:
                         for(String s : in.getVariableOrder())
                             for(int l1 : possibleCValues.keySet())
@@ -282,7 +281,11 @@ public class SimplexAlgorithm
                                     c = l1;
                                     break RULE2;
                                 }
-                
+                    }
+                    
+                    else
+                        return pos;
+
                 else
                     c = (int)possibleCValues.keySet().toArray()[0];
                 

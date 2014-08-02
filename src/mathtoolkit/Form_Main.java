@@ -6,11 +6,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
+
 import java.beans.PropertyVetoException;
+
 import java.util.Arrays;
 import java.util.TreeMap;
+
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
+
 import mathtoolkit.base.Rational;
 import mathtoolkit.tableau.DataSet;
 import mathtoolkit.tableau.Form_NewTableau;
@@ -121,7 +125,7 @@ public class Form_Main extends javax.swing.JFrame
 
         jMenu1.setText("Math");
 
-        jMenuItem1.setText("Simplex Algorithm");
+        jMenuItem1.setText("New Simplex Tableau");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)

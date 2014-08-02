@@ -1,17 +1,22 @@
 package mathtoolkit.tableau;
 
-import mathtoolkit.Form_Main;
-import mathtoolkit.base.Point;
-
+import java.util.Arrays;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
+
+import mathtoolkit.Form_Main;
+import mathtoolkit.base.Point;
 
 public class Form_Tableau extends mathtoolkit.PopOutFrame
 {
     private static int FRAMECOUNT = 0;
     private Stack<DataSet> _history;
     private DataSet _original;
+    
+    private final static Logger LOG = Logger.getLogger(SimplexAlgorithm.class.getName());
     
     private abstract class ErrorCheck
     {
@@ -31,6 +36,13 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
                         + "contain numbers, decimals, or front slashes (/).",
                         "Invalid Tableau Entry",
                         JOptionPane.ERROR_MESSAGE);
+            }
+            
+            catch(Exception e)
+            {
+                LOG.log(Level.SEVERE, e.toString(), e);
+                System.out.println("Something bad happened. :(");
+                System.err.println(Arrays.toString(e.getStackTrace()));
             }
         }
     }

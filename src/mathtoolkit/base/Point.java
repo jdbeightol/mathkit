@@ -15,7 +15,5 @@ public class Point
     
     @Override
     public String toString()
-    {
-        return String.format("(%d, %d)", i, j);
-    }
+    {    return String.format("(%d, %d)", i, j);    }
 }

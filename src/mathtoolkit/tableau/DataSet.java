@@ -1,6 +1,8 @@
 package mathtoolkit.tableau;
 
 import java.util.Arrays;
+
+import mathtoolkit.Form_Main;
 import mathtoolkit.base.Rational;
 
 public class DataSet
@@ -86,6 +88,9 @@ public class DataSet
             System.arraycopy(maxVariables, 0, variableOrder, 0, maxVariables.length - 1);
             System.arraycopy(maxSlackVars, 0, variableOrder, maxVariables.length - 1, maxSlackVars.length - 1);
         }
+        
+        else
+            variableOrder = null;
     }
     
     public void setData(Rational[][] in)
@@ -170,7 +175,12 @@ public class DataSet
     {    return data == null;    }
     
     public boolean isOrderNull()
-    {   return variableOrder == null;    }
+    {   
+        if(Form_Main.debug()) 
+            System.out.printf("varOrd: %s\n", Arrays.toString(variableOrder));
+    
+        return variableOrder == null;    
+    }
     
     public boolean isMaxNull()
     {    return maxVariables == null || maxSlackVars == null;    }
