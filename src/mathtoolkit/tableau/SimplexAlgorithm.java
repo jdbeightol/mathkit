@@ -127,14 +127,18 @@ public class SimplexAlgorithm
     
     public static DataSet negativeTranspose(DataSet in)
     {
-        DataSet out = new DataSet(in.getData());
+        DataSet out = new DataSet();
+        Rational[][] inData = in.getData(),
+                     outData = new Rational[inData[0].length][inData.length];
         
         if(!in.isMinNull())
         {
-            String[] mxSlack = out.getMaxSlackArray();
+            String[] mxSlack;
             
             out.setMax(in.getMinVarArray(), in.getMinSlackArray());
-            out.setMin(null, null);                        
+            out.setMin(null, null);
+            
+            mxSlack = out.getMaxSlackArray();
             mxSlack[mxSlack.length - 1] = "-" + mxSlack[mxSlack.length - 1];
         }
         
@@ -147,11 +151,12 @@ public class SimplexAlgorithm
         }
         
         out.generateVariableOrder();
-        Rational[][] inData = in.getData();
-
+        
         for(int i = 0; i < inData.length; i++)
             for(int j = 0; j < inData[i].length; j++)
-                out.getData()[j][i] = inData[i][j].multiply(-1);
+                outData[j][i] = inData[i][j].multiply(-1);
+        
+        out.setData(outData);
 
         printTableauTransform("Negative Transposition", in, out);
 

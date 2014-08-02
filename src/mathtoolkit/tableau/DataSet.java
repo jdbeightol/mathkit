@@ -131,7 +131,7 @@ public class DataSet
             maxSlackVars = null;
         }
         
-        if(isOrderNull())
+        if(variableOrder == null)
             generateVariableOrder();
     }
     
@@ -177,9 +177,9 @@ public class DataSet
     public boolean isOrderNull()
     {   
         if(Form_Main.debug()) 
-            System.out.printf("varOrd: %s\n", Arrays.toString(variableOrder));
+            System.out.printf("Order Array: %s\n", Arrays.toString(variableOrder));
     
-        return variableOrder == null;    
+        return variableOrder == null;
     }
     
     public boolean isMaxNull()
