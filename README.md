@@ -17,14 +17,16 @@ Planned Features:
     Network flow optimization.
     Mathematical tools relevant to disciplines beyond pure mathematics (eg. Physics and Computer Science).
   
-A Brief How-To:
----------------
+A Brief Explanation:
+--------------------
 
 Console:
 
 The console is the most important window of the application.  Here, all of the important information relevant to a tableau will be displayed.  
 
 Tableaus:
+
+Note that at any time, you may right click the table and choose "Check Tableau State" to output the current state of the tableau. This is useful for verifying variable order.
 
     -To create a new tableau, navigate to the "Math" menu on the main 
      and choose "New Simplex Tablaeu".  
@@ -45,7 +47,7 @@ Tableaus:
      displayed in the Console, and the table will now display the updated 
      result of the tableau.
      
-At any time, you may right click the table and choose "Check Tableau State" to output the current state of the tableau. This is useful for verifying variable order.
-    
+-----
+
 IMPORTANT NOTICE:
 I cannot guarantee this application is 100% free of error.  While I have tested and profiled the application extensively against various problems found in James Strayer's "Undergraduate Texts in Mathematics: Linear Programming  and Its Applications", obscure situations may exist which detriment the accuracy of the algorithm implementations.   As such, all results should be properly verified by hand and any contradictory results should be reported.
