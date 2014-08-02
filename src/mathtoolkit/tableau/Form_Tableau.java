@@ -1,10 +1,11 @@
 package mathtoolkit.tableau;
 
+import mathtoolkit.Form_Main;
 import mathtoolkit.base.Point;
 
 import java.util.Stack;
+
 import javax.swing.JOptionPane;
-import mathtoolkit.Form_Main;
 
 public class Form_Tableau extends mathtoolkit.PopOutFrame
 {
@@ -37,8 +38,8 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
     public Form_Tableau()
     {
         super("Simplex Tableau " + ++FRAMECOUNT, true, true, true, true);
-        initComponents();
         _history = new Stack<>();
+        initComponents();
         setLocation(45 * (FRAMECOUNT % 10), 45 * (FRAMECOUNT % 10));
     }
     
