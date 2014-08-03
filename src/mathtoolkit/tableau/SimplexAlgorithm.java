@@ -146,7 +146,7 @@ public class SimplexAlgorithm
         {
             out.setMax(null, null);
             out.setMin(null, null);
-            System.out.println("No minimum variables were present, so all "
+            System.out.println("No minimum variables were present, thus all "
                     + "variables have been removed.");
         }
         

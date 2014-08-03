@@ -2,7 +2,7 @@ package mathtoolkit.tableau;
 
 import java.util.Arrays;
 
-import mathtoolkit.Form_Main;
+import mathtoolkit.MathKit;
 import mathtoolkit.base.Rational;
 
 public class DataSet
@@ -176,7 +176,7 @@ public class DataSet
     
     public boolean isOrderNull()
     {   
-        if(Form_Main.debug()) 
+        if(MathKit.isDebug()) 
             System.out.printf("Order Array: %s\n", Arrays.toString(variableOrder));
     
         return variableOrder == null;
