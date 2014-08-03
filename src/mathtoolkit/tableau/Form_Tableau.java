@@ -7,16 +7,17 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
-import mathtoolkit.Form_Main;
+import mathtoolkit.MathKit;
 import mathtoolkit.base.Point;
 
 public class Form_Tableau extends mathtoolkit.PopOutFrame
 {
+    private final static Logger LOG = Logger.getLogger(MathKit.class.getName());
+
     private static int FRAMECOUNT = 0;
-    private Stack<DataSet> _history;
-    private DataSet _original;
     
-    private final static Logger LOG = Logger.getLogger(SimplexAlgorithm.class.getName());
+    private Stack<DataSet> _history;
+    private DataSet _original;   
     
     private abstract class ErrorCheck
     {
@@ -66,7 +67,7 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
         this();
         tableau1.create(variables, constraints, varX, varY);
         
-        if(Form_Main.debug())
+        if(MathKit.isDebug())
             tableau1.debugFill();        
     }
     

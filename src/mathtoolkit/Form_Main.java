@@ -22,8 +22,7 @@ import mathtoolkit.tableau.Form_Tableau;
 
 public class Form_Main extends javax.swing.JFrame
 {
-    private static Form_Console _CONSOLE;
-    private static boolean _DEBUG = false;
+    private static Form_Console _console;
     
     public Form_Main()
     {
@@ -44,12 +43,12 @@ public class Form_Main extends javax.swing.JFrame
         
         setLocationRelativeTo(null);
         
-        _CONSOLE = new Form_Console();
-        desktopPane.add(_CONSOLE);
-        _CONSOLE.setVisible(true);
-        _CONSOLE.setSize(3 * screenSize.width / 5, 3 * screenSize.height / 5);
+        _console = new Form_Console();
+        desktopPane.add(_console);
+        _console.setVisible(true);
+        _console.setSize(3 * screenSize.width / 5, 3 * screenSize.height / 5);
         
-        if(!_DEBUG)
+        if(!MathKit.isDebug())
             jMenu4.setVisible(false);
         
         System.out.println("To begin, choose an item from the menu above.");
@@ -212,7 +211,7 @@ public class Form_Main extends javax.swing.JFrame
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem2ActionPerformed
     {//GEN-HEADEREND:event_jMenuItem2ActionPerformed
-        _CONSOLE.popout();
+        _console.popout();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -283,9 +282,6 @@ public class Form_Main extends javax.swing.JFrame
         f.setVisible(true);        
     }//GEN-LAST:event_jMenuItem5ActionPerformed
     
-    public static boolean debug()
-    {   return _DEBUG;    }
-    
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -311,7 +307,7 @@ public class Form_Main extends javax.swing.JFrame
 
         for(String s : args)
             if(s.equals("--debug"))
-                _DEBUG = true;
+                MathKit.setDebugMode();
         
         java.awt.EventQueue.invokeLater(new Runnable() 
         {
