@@ -9,6 +9,7 @@ Current Features:
     The Dantzig Simplex Algorithm for Canonical Tableaus with Anti-Cycling rules.
   
 Planned Features:
+
     -Equation parsing and maipulation.
     -Detection and display of non-unique solutions.
     -Better graphical support for tableaus.
