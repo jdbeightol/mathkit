@@ -9,13 +9,14 @@ Current Features:
     The Dantzig Simplex Algorithm for Canonical Tableaus with Anti-Cycling rules.
   
 Planned Features:
-    Equation parsing and maipulation.
-    Detection and display of non-unique solutions.
-    Better graphical support for tableaus.
-    Support for non-canonical tableaus and equation filing.
-    Support for generating game-theory tableaus.
-    Network flow optimization.
-    Mathematical tools relevant to disciplines beyond pure mathematics (eg. Physics and Computer Science).
+    -Equation parsing and maipulation.
+    -Detection and display of non-unique solutions.
+    -Better graphical support for tableaus.
+    -Support for non-canonical tableaus and equation filing.
+    -Support for generating game-theory tableaus.
+    -Network flow optimization.
+    -Mathematical tools relevant to disciplines beyond pure mathematics 
+     (eg. Physics and Computer Science).
   
 A Brief Explanation:
 --------------------
