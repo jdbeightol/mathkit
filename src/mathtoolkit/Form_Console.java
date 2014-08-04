@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 public class Form_Console extends PopOutFrame
@@ -24,7 +25,38 @@ public class Form_Console extends PopOutFrame
     private void saveFile()
     {
         BufferedWriter bw;
-        JFileChooser fc = new JFileChooser();
+        JFileChooser fc = new JFileChooser()
+        {
+            @Override
+            public void approveSelection()
+            {
+                if(getSelectedFile().exists())
+                {
+                    int result = JOptionPane.showConfirmDialog(this,
+                            "The selected file already exists. Would you like "
+                                    + "to overwrite it?", "Existing file",
+                            JOptionPane.YES_NO_CANCEL_OPTION);
+                    
+                    switch(result)
+                    {
+                        case JOptionPane.YES_OPTION:
+                            super.approveSelection();
+                            break;
+                            
+                        case JOptionPane.CANCEL_OPTION:
+                            super.cancelSelection();
+                            break;
+
+                        case JOptionPane.CLOSED_OPTION:
+                        case JOptionPane.NO_OPTION:
+                            break;    
+                    }
+                }
+                
+                else
+                    super.approveSelection();                    
+            }
+        };
         
         fc.setSelectedFile(new File("MathkitOutput.txt"));
         fc.setFileFilter(new FileFilter()
