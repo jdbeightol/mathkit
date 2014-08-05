@@ -42,6 +42,7 @@ Note that at any time, you may right click the table and choose "Check Tableau S
     -Click create to create a blank tableau.
     
     -Now, enter the values of the tableau into the cells of the table.
+    
     -All tableau operations are performed by right-clicking a cell and 
      choosing an option from the menu.
      
