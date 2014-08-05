@@ -2,10 +2,10 @@ package mathtoolkit;
 
 public class MathKit
 {
-    public static final String VERSION = "0.99.1";
+    public static final String VERSION = "0.99.2";
     
     private static boolean debug = false;
-
+    
     public static void setDebugMode()
     {
         debug = true;

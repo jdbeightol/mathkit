@@ -203,6 +203,8 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
     
     private void solve(final boolean min)
     {
+        System.out.printf("\n%s solution:\n", this.getTitle());
+        
         new ErrorCheck()
         {
             @Override
