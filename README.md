@@ -19,8 +19,8 @@ Planned Features:
     -Mathematical tools relevant to disciplines beyond pure mathematics 
      (eg. Physics and Computer Science).
   
-A Brief Explanation:
---------------------
+A Brief Explanation
+-------------------
 
 Console:
 
