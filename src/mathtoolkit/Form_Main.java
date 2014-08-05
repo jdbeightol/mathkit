@@ -56,7 +56,7 @@ public class Form_Main extends javax.swing.JFrame
     
     private void updateWindowList()
     {
-        jMenu3.removeAll();
+        jMenu2.removeAll();
         
         // For sorting purposes.
         TreeMap<String, JInternalFrame> tm = new TreeMap<>();
@@ -67,11 +67,11 @@ public class Form_Main extends javax.swing.JFrame
         for(String s : tm.keySet())
         {
             final JInternalFrame f = tm.get(s);
-            JMenuItem winMenu = new JMenuItem();
+            JMenuItem winItem = new JMenuItem();
             
-            winMenu.setText(s);
+            winItem.setText(s);
             
-            winMenu.addActionListener(new ActionListener()
+            winItem.addActionListener(new ActionListener()
             {
                 @Override
                 public void actionPerformed(ActionEvent e)
@@ -97,7 +97,7 @@ public class Form_Main extends javax.swing.JFrame
                 }
             });
             
-            jMenu3.add(winMenu);
+            jMenu2.add(winItem);
         }
     }
     
@@ -111,7 +111,6 @@ public class Form_Main extends javax.swing.JFrame
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
@@ -137,10 +136,6 @@ public class Form_Main extends javax.swing.JFrame
         menuBar.add(jMenu1);
 
         jMenu2.setText("Window");
-
-        jMenu3.setText("Window List");
-        jMenu2.add(jMenu3);
-
         menuBar.add(jMenu2);
 
         jMenu4.setText("Debug");
@@ -323,7 +318,6 @@ public class Form_Main extends javax.swing.JFrame
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;

@@ -356,6 +356,7 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
 
         tableau1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         tableau1.setRowHeight(48);
+        tableau1.setRowSelectionAllowed(false);
         tableau1.addMouseListener(new java.awt.event.MouseAdapter()
         {
             public void mousePressed(java.awt.event.MouseEvent evt)
@@ -456,8 +457,8 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JMenuItem negTranspose;
     private javax.swing.JMenuItem pivot;
     private javax.swing.JMenuItem revert;

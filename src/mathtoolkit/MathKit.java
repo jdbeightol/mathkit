@@ -2,7 +2,7 @@ package mathtoolkit;
 
 public class MathKit
 {
-    public static final String VERSION = "0.99";
+    public static final String VERSION = "0.99.1";
     
     private static boolean debug = false;
 
