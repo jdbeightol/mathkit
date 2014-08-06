@@ -124,66 +124,6 @@ public class Tableau extends JTable
         transferFocus();
     }
     
-    public DataSet getData() throws NumberFormatException
-    {
-        DataSet td = new DataSet();
-        TableauModel t = (TableauModel)getModel();
-        
-        Rational[][] tData = new Rational[t.getRowCount()][t.getColumnCount()];
-        
-        for(int i = 0 ; i < t.getRowCount() ; i++)
-            for (int j = 0 ; j < t.getColumnCount(); j++)
-                    tData[i][j] = new Rational(
-                            (t.getValueAt(i, j) == null
-                                    || ((String)t.getValueAt(i, j)).equals(""))
-                                    ?"0":(String)t.getValueAt(i, j)
-                    );
-        
-        td.setData(tData);
-        
-        td.setMax(t.mxVar[0], t.mxVar[1]);
-        td.setMin(t.mnVar[0], t.mnVar[1]);
-        td.setVariableOrder(t.vrOrd);
-        
-        return td;
-    }
-    
-    public void setData(DataSet tableauData)
-    {
-        int columns = tableauData.getData()[0].length;
-        TableauModel t;
-        
-        t = new Tableau.TableauModel(new Object[][] {}, new String[columns]);
-        
-        t.vrOrd = tableauData.getVariableOrder();
-        
-        t.mxVar[0] = tableauData.getMaxVarArray();
-        t.mxVar[1] = tableauData.getMaxSlackArray();
-        t.mnVar[0] = tableauData.getMinVarArray();
-        t.mnVar[1] = tableauData.getMinSlackArray();
-        
-        for(Rational[] r : tableauData.getData())
-        {
-            String s[] = new String[r.length];
-            
-            for(int n = 0; n < r.length; n++)
-                s[n] = (r[n] != null)?r[n].toString():"";
-            
-            t.addRow(s);
-        }
-        
-        this.setModel(t);
-    }
-    
-    public void debugFill()
-    {
-        TableauModel t = (TableauModel)getModel();
-
-        for(int i = 0; i < t.getRowCount(); i++)
-            for(int j = 0; j < t.getColumnCount(); j++)
-                t.setValueAt("1", i, j);
-    }
-    
     public void create(int variables, int constraints, String[] varX, String[] varY)
     {
         DataSet d = new DataSet(new Rational[constraints + 1][variables + 1]);        
@@ -239,6 +179,106 @@ public class Tableau extends JTable
         }
         
         setData(d);
+    }
+    
+    public void debugFill()
+    {
+        TableauModel t = (TableauModel)getModel();
+
+        for(int i = 0; i < t.getRowCount(); i++)
+            for(int j = 0; j < t.getColumnCount(); j++)
+                t.setValueAt("1", i, j);
+    }
+    
+    public DataSet getData() throws NumberFormatException
+    {
+        DataSet td = new DataSet();
+        TableauModel t = (TableauModel)getModel();
+        
+        Rational[][] tData = new Rational[t.getRowCount()][t.getColumnCount()];
+        
+        for(int i = 0 ; i < t.getRowCount() ; i++)
+            for (int j = 0 ; j < t.getColumnCount(); j++)
+                    tData[i][j] = new Rational(
+                            (t.getValueAt(i, j) == null
+                                    || ((String)t.getValueAt(i, j)).equals(""))
+                                    ?"0":(String)t.getValueAt(i, j)
+                    );
+        
+        td.setData(tData);
+        
+        td.setMax(t.mxVar[0], t.mxVar[1]);
+        td.setMin(t.mnVar[0], t.mnVar[1]);
+        td.setVariableOrder(t.vrOrd);
+        
+        return td;
+    }
+    
+    public void setData(DataSet tableauData)
+    {
+        int columns = tableauData.getData()[0].length;
+        TableauModel t;
+        
+        t = new Tableau.TableauModel(new Object[][] {}, new String[columns]);
+        
+        t.vrOrd = tableauData.getVariableOrder();
+        
+        t.mxVar[0] = tableauData.getMaxVarArray();
+        t.mxVar[1] = tableauData.getMaxSlackArray();
+        t.mnVar[0] = tableauData.getMinVarArray();
+        t.mnVar[1] = tableauData.getMinSlackArray();
+        
+        for(Rational[] r : tableauData.getData())
+        {
+            String s[] = new String[r.length];
+            
+            for(int n = 0; n < r.length; n++)
+                s[n] = (r[n] != null)?r[n].toString():"";
+            
+            t.addRow(s);
+        }
+        
+        this.setModel(t);
+    }
+    
+    public void removeRow(int rowNumber)
+    {
+        int x;
+        
+        DataSet ds = getData();
+        
+        Rational[][] data = ds.getData();
+        Rational[][] newData = new Rational[data.length - 1][data[0].length];
+        
+        String[] maxSlacks = ds.getMaxSlackArray();
+        String[] minVars = ds.getMinVarArray();
+        
+        String[] newSlacks = new String[maxSlacks.length - 1];
+        String[] newVars = new String[minVars.length - 1];
+        
+        for(int i = x = 0; i < data.length; i++)
+            if(i != rowNumber)
+                System.arraycopy(data[i], 0, newData[x++], 0, data.length);
+        
+        System.arraycopy(maxSlacks, 0, newSlacks, 0, rowNumber);
+        System.arraycopy(maxSlacks, rowNumber, newSlacks, 0, maxSlacks.length - rowNumber - 1);
+        
+        System.arraycopy(minVars, 0, newVars, 0, rowNumber);
+        System.arraycopy(minVars, rowNumber, newVars, 0, minVars.length - rowNumber - 1);
+        
+        ds.setData(newData);
+        
+        ds.setMax(ds.getMaxVarArray(), newSlacks);
+        ds.setMin(newVars, ds.getMinSlackArray());
+        
+        setData(ds);
+    }
+    
+    public void removeColumn(int colNumber)
+    {
+        DataSet ds = getData();
+        
+        setData(ds);
     }
         
     private void initKeyBindings() 
