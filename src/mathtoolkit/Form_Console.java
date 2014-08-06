@@ -1,5 +1,8 @@
 package mathtoolkit;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -21,7 +24,7 @@ public class Form_Console extends PopOutFrame
     {
         initComponents();
     }
-    
+        
     private void saveFile()
     {
         BufferedWriter bw;

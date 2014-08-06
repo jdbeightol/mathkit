@@ -1,20 +1,17 @@
 package mathtoolkit;
 
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
-
 import java.beans.PropertyVetoException;
-
 import java.util.Arrays;
 import java.util.TreeMap;
-
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
-
 import mathtoolkit.base.Rational;
 import mathtoolkit.tableau.DataSet;
 import mathtoolkit.tableau.Form_NewTableau;
@@ -26,7 +23,6 @@ public class Form_Main extends javax.swing.JFrame
     
     public Form_Main()
     {
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setExtendedState(getExtendedState()|javax.swing.JFrame.MAXIMIZED_BOTH);
         initComponents();
         
@@ -46,12 +42,28 @@ public class Form_Main extends javax.swing.JFrame
         _console = new Form_Console();
         desktopPane.add(_console);
         _console.setVisible(true);
-        _console.setSize(3 * screenSize.width / 5, 3 * screenSize.height / 5);
         
         if(!MathKit.isDebug())
             jMenu4.setVisible(false);
         
         System.out.println("To begin, choose an item from the menu above.");
+    }
+    
+    private void setConsoleSize()
+    {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Insets taskbars = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
+        
+        int height = screenSize.height - getInsets().top - getInsets().bottom
+                - taskbars.bottom - taskbars.top - menuBar.getHeight(),
+            width = screenSize.width - getInsets().left - getInsets().right
+                - taskbars.left - taskbars.right;
+        
+        System.out.printf("W: %s, H: %s\n", width, height);
+        
+        _console.setSize(3 * width / 5, 3 * height / 5);
+        _console.setLocation(width - _console.getWidth(),
+                height - _console.getHeight());
     }
     
     private void updateWindowList()
@@ -201,7 +213,7 @@ public class Form_Main extends javax.swing.JFrame
     
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem1ActionPerformed
     {//GEN-HEADEREND:event_jMenuItem1ActionPerformed
-        new Form_NewTableau(this, this.desktopPane, false).setVisible(true);
+        new Form_NewTableau(this, desktopPane, false).setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -309,7 +321,9 @@ public class Form_Main extends javax.swing.JFrame
             @Override
             public void run() 
             {
-                new Form_Main().setVisible(true);
+                Form_Main fm = new Form_Main();
+                fm.setVisible(true);
+                fm.setConsoleSize();
             }
         });
     }

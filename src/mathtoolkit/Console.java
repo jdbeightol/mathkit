@@ -39,17 +39,15 @@ public class Console extends JTextArea
         
         initProperties();
         initListeners();
-        initKeyBindings();
-        setSystemOut();     
+//        initKeyBindings();
+        setSystemOut();
     }
     
     private void initProperties()
     {
         ((DefaultCaret)getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);        
         setEditable(false);
-//        setColumns(20);
-//        setRows(5);
-        setFont(new java.awt.Font("Monospaced", 1, 12)); // NOI18N
+        setFont(new java.awt.Font("Monospaced", 1, 12));        
     }
     
     private void setSystemOut()
