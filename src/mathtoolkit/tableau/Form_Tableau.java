@@ -229,10 +229,18 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
     {
         if(e.isPopupTrigger())
         {
+            int row = tableau1.rowAtPoint(e.getPoint()),
+                col = tableau1.columnAtPoint(e.getPoint());
+            
+            boolean end = row < tableau1.getRowCount() - 1
+                && col < tableau1.getColumnCount() - 1;
+            
             pivot.setText("Pivot on " + tableau1.getValueAt(
-                    tableau1.rowAtPoint(e.getPoint()), 
-                    tableau1.columnAtPoint(e.getPoint())));
-        
+                    row, col));
+            
+            pivot.setVisible(end);
+            jSeparator2.setVisible(end);
+            
             jPopupMenu1.show(e.getComponent(), e.getX(), e.getY());
         }
     }
@@ -363,9 +371,9 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
         setMaximizable(true);
         setResizable(true);
 
+        tableau1.setColumnSelectionAllowed(true);
         tableau1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         tableau1.setRowHeight(48);
-        tableau1.setRowSelectionAllowed(false);
         tableau1.addMouseListener(new java.awt.event.MouseAdapter()
         {
             public void mousePressed(java.awt.event.MouseEvent evt)
@@ -383,17 +391,11 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
         );
 
         pack();
