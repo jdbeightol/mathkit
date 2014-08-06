@@ -59,8 +59,8 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
         
         setLocation(45 * (FRAMECOUNT % 10), 45 * (FRAMECOUNT % 10));
         
-        System.out.println("\nYou may right click a cell to display a menu of"
-                + "available actions.");
+        System.out.println("\nRight click a cell to display a menu of available"
+                + " actions.");
     }
     
     public Form_Tableau(DataSet ds)
@@ -229,8 +229,8 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
     {
         if(e.isPopupTrigger())
         {
-            int row = tableau1.rowAtPoint(e.getPoint()),
-                col = tableau1.columnAtPoint(e.getPoint());
+            int row = tableau1.getSelectedRow(),
+                col = tableau1.getSelectedColumn();
             
             boolean end = row < tableau1.getRowCount() - 1
                 && col < tableau1.getColumnCount() - 1;
