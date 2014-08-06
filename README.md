@@ -1,4 +1,4 @@
-mathkit
+MathKit
 =======
 
 A toolkit for various mathematical problems, specifically: Linear maximization and minimization problems.
@@ -10,15 +10,13 @@ Current Features:
   
 Planned Features:
 
-    -Equation parsing and maipulation.
-    -Detection and display of non-unique solutions.
-    -Better graphical support for tableaus.
     -Support for non-canonical tableaus and equation filing.
-    -Support for generating game-theory tableaus.
-    -Network flow optimization.
+    -Support for Transportation Problems.
+    -Support for Network flow optimization Problems.
+    -Better graphical support for tableaus.
     -Mathematical tools relevant to disciplines beyond pure mathematics 
      (eg. Physics and Computer Science).
-  
+
 A Brief Explanation
 -------------------
 
@@ -30,8 +28,10 @@ Tableaus:
 
 Note that at any time, you may right click the table and choose "Check Tableau State" to output the current state of the tableau. This is useful for verifying variable order.
 
-    -To create a new tableau, navigate to the "Math" menu on the main 
-     and choose "New Simplex Tablaeu".  
+To create a new tableau:
+
+    -Navigate to the "Math" menu on the main and choose "New Simplex 
+     Tablaeu".  
      
     -From here, you can specify the number of variables and constraints 
      the problem has.  In addition, you can also specify a custom comma 
