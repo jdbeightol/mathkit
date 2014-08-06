@@ -59,7 +59,8 @@ public class Form_Main extends javax.swing.JFrame
             width = screenSize.width - getInsets().left - getInsets().right
                 - taskbars.left - taskbars.right;
         
-        System.out.printf("W: %s, H: %s\n", width, height);
+        if(MathKit.isDebug())
+            System.out.printf("Useable Screen Size W: %s, H: %s\n", width, height);
         
         _console.setSize(3 * width / 5, 3 * height / 5);
         _console.setLocation(width - _console.getWidth(),
