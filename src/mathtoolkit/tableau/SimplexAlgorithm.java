@@ -2,7 +2,6 @@ package mathtoolkit.tableau;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
-
 import mathtoolkit.base.Point;
 import mathtoolkit.base.Rational;
 
@@ -86,8 +85,15 @@ public class SimplexAlgorithm
                             + "bounded.");
         
         else
+        {
+            String sol = formatMaxSolution(in);
+            
+            if(!sol.equals(""))
+                sol += "\n";
+            
             System.out.printf("The basic solution of the current tableau is "
-                    + "optimal.\n%s\n\n", formatMaxSolution(in));
+                    + "optimal.\n%s", sol);
+        }
     }
     
     public static DataSet dantzigSimplexAlgorithm(DataSet in, boolean min)

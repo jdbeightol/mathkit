@@ -59,8 +59,9 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
         
         setLocation(45 * (FRAMECOUNT % 10), 45 * (FRAMECOUNT % 10));
         
-        System.out.println("\nRight click a cell to display a menu of available"
-                + " actions.");
+        if(FRAMECOUNT == 1)
+            System.out.println("\nRight click an entry in the tableau to display"
+                    + " a list of possible actions.");
     }
     
     public Form_Tableau(DataSet ds)
