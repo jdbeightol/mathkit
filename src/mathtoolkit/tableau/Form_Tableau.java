@@ -53,7 +53,14 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
         super("Simplex Tableau " + ++FRAMECOUNT, true, true, true, true);
         _history = new Stack<>();
         initComponents();
+        
+        if(!mathtoolkit.MathKit.isDebug())
+            findPivot.setVisible(false);
+        
         setLocation(45 * (FRAMECOUNT % 10), 45 * (FRAMECOUNT % 10));
+        
+        System.out.println("\nYou may right click a cell to display a menu of"
+                + "available actions.");
     }
     
     public Form_Tableau(DataSet ds)
