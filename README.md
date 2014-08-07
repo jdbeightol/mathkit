@@ -1,4 +1,4 @@
-MathKit
+MathKit: A Mathematical Toolkit
 =======
 
 A toolkit for various mathematical problems, specifically: Linear maximization and minimization problems.
@@ -6,8 +6,10 @@ A toolkit for various mathematical problems, specifically: Linear maximization a
 MathKit was inspired by the lectures of Dr. James Strayer at Lock Haven University.  While it currently represents only a small fraction of the subject matter he taught, the goal of this project is to incorporate a vast collection of mathematical tools to aid students and teachers alike in their educational adventures.
 
 Current Features:
-    The Dantzig Simplex Algorithm for Canonical Tableaus with Anti-Cycling rules.
-  
+
+    -The Dantzig Simplex Algorithm for Canonical Tableaus with Anti-Cycling
+     rules.
+
 Planned Features:
 
     -Support for non-canonical tableaus and equation filing.
