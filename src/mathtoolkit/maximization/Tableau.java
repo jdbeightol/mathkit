@@ -1,4 +1,4 @@
-package mathtoolkit.tableau;
+package mathtoolkit.maximization;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;

@@ -13,9 +13,9 @@ import java.util.TreeMap;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
 import mathtoolkit.base.Rational;
-import mathtoolkit.tableau.DataSet;
-import mathtoolkit.tableau.Form_NewTableau;
-import mathtoolkit.tableau.Form_Tableau;
+import mathtoolkit.maximization.DataSet;
+import mathtoolkit.maximization.Form_NewTableau;
+import mathtoolkit.maximization.Form_Tableau;
 
 public class Form_Main extends javax.swing.JFrame
 {
@@ -23,8 +23,8 @@ public class Form_Main extends javax.swing.JFrame
     
     public Form_Main()
     {
-        setExtendedState(getExtendedState()|javax.swing.JFrame.MAXIMIZED_BOTH);
         initComponents();
+        setExtendedState(getExtendedState()|javax.swing.JFrame.MAXIMIZED_BOTH);
         
         desktopPane.addContainerListener(new ContainerListener()
         {
@@ -51,6 +51,7 @@ public class Form_Main extends javax.swing.JFrame
     
     private void setConsoleSize()
     {
+        
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Insets taskbars = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
         

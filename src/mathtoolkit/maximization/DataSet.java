@@ -1,4 +1,4 @@
-package mathtoolkit.tableau;
+package mathtoolkit.maximization;
 
 import java.util.Arrays;
 

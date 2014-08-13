@@ -1,4 +1,4 @@
-package mathtoolkit.tableau;
+package mathtoolkit.maximization;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDesktopPane;

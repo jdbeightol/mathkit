@@ -1,4 +1,4 @@
-package mathtoolkit.tableau;
+package mathtoolkit.maximization;
 
 import java.util.Arrays;
 import java.util.Stack;
@@ -266,7 +266,7 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
         undo = new javax.swing.JMenuItem();
         revert = new javax.swing.JMenuItem();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableau1 = new mathtoolkit.tableau.Tableau();
+        tableau1 = new mathtoolkit.maximization.Tableau();
 
         pivot.setText("Pivot Here");
         pivot.addActionListener(new java.awt.event.ActionListener()
@@ -476,7 +476,7 @@ public class Form_Tableau extends mathtoolkit.PopOutFrame
     private javax.swing.JMenuItem revert;
     private javax.swing.JMenuItem solveMax;
     private javax.swing.JMenuItem solveMin;
-    private mathtoolkit.tableau.Tableau tableau1;
+    private mathtoolkit.maximization.Tableau tableau1;
     private javax.swing.JMenuItem undo;
     // End of variables declaration//GEN-END:variables
 }

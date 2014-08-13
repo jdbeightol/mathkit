@@ -1,6 +1,6 @@
 package mathtoolkit.equations;
 
-import mathtoolkit.tableau.DataSet;
+import mathtoolkit.maximization.DataSet;
 
 public class EquationParser
 {
