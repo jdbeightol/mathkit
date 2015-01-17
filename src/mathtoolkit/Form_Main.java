@@ -51,7 +51,8 @@ public class Form_Main extends javax.swing.JFrame
     
     private void setConsoleSize()
     {
-        
+        // This section causes the console to display incorrectly on multimonitor systems.
+        /*
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Insets taskbars = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
         
@@ -66,6 +67,9 @@ public class Form_Main extends javax.swing.JFrame
         _console.setSize(3 * width / 5, 3 * height / 5);
         _console.setLocation(width - _console.getWidth(),
                 height - _console.getHeight());
+        */
+        
+        _console.setLocation(0, 0);
     }
     
     private void updateWindowList()
